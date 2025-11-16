@@ -1,10 +1,12 @@
 # G4-WAD_RWD-FinalProj
-A PHP + SQLite web application for managing classroom key borrowing and returning. Allows student officers to log in, record borrowed keys, mark returns, and track key history.
+**CampusFind**
+A PHP + SQLite web application where students or staff can post items they lost or found inside campus. Users can submit details, update their posts, delete them, and mark items as claimed when they are returned to the owner.
 
 **Features**
 - User registration and login (with password hashing)
-- Dashboard displaying available and borrowed keys
-- Borrow and return key functions (CRUD operations)
-- Borrowing history and tracking logs
-- Basic form validation and data sanitization
+- Dashboard displaying lost and found items
+- Post, update, and delete items and details functions (CRUD operations)
+- Lost and Found Items Feed
+- Basic form validation and data sanitization (in log-in, log-out and posting items)
+- Mobile-First Design
 - Responsive design using HTML, CSS, and Bootstrap
