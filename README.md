@@ -1,5 +1,7 @@
-# G4-WAD_RWD-FinalProj
-**CampusFind**
+# CampusFind
+**	“Your Campus Lost & Found Hub
+Where Lost Items Find Their Owners.”
+**
 
 A PHP + SQLite web application where students or staff can post items they lost or found inside campus. Users can submit details, update their posts, delete them, and mark items as claimed when they are returned to the owner.
 
