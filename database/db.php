@@ -1,65 +1,94 @@
-<!-- TO DOs
- 1. fix the limiting numbers sa VARCHAR (SQLite does not support that)
- 2. fix the connection between the categories and items table (newly added lang yung categories table kasi) -->
-
 <?php
-function get_db(): SQLite3
+function get_db(): SQLite3 
 {
     static $db = null;
     if ($db !== null) {
         return $db;
     }
+
     $dbPath = __DIR__ . '/../database/campusFind.db';
     $db = new SQLite3($dbPath);
     $db->enableExceptions(true);
 
-    // Create users table if it does not exist
+    // USERS TABLE
     $db->exec("CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        username VARCHAR(50) UNIQUE NOT NULL,
-        email VARCHAR(100) UNIQUE NOT NULL,
-        password_hash VARCHAR(255) NOT NULL,
-        role VARCHAR(20) DEFAULT 'user',
+        username TEXT UNIQUE NOT NULL,
+        email TEXT UNIQUE NOT NULL,
+        password_hash TEXT NOT NULL,
+        role TEXT DEFAULT 'user',
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )");
 
-    // Create items table if it does not exist
-    $db->exec( "CREATE TABLE IF NOT EXISTS items (
+    // CATEGORIES TABLE
+    $db->exec("CREATE TABLE IF NOT EXISTS categories (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT UNIQUE NOT NULL
+    )");
+
+    // ITEMS TABLE
+    $db->exec("CREATE TABLE IF NOT EXISTS items (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER NOT NULL,
-        title VARCHAR(255) NOT NULL,
+        title TEXT NOT NULL,
         description TEXT,
-        item_type VARCHAR(10) NOT NULL, -- 'lost' or 'found'
-        category_id VARCHAR(50), -- 'electronics', 'books', 'clothing', 'accessories', 'other'
-        location_found VARCHAR(255),
-        location_details TEXT,
+        item_type TEXT NOT NULL,     -- 'lost' or 'found'
+        category_id INTEGER,
+        location_found TEXT,
         date_lost_or_found DATE,
-        status VARCHAR(20) DEFAULT 'open', -- 'open', 'claimed', 'closed'
-        contact_info VARCHAR(255),
-        image_path VARCHAR(500),
+        status TEXT DEFAULT 'open',  -- 'open', 'claimed', 'closed'
+        current_location TEXT,
+        image_path TEXT,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        -- updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         claimed_by_user_id INTEGER,
         claimed_at DATETIME,
-        
+
         FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-        FOREIGN KEY (claimed_by_user_id) REFERENCES users(id) ON DELETE SET NULL
+        FOREIGN KEY (claimed_by_user_id) REFERENCES users(id) ON DELETE SET NULL,
         FOREIGN KEY (category_id) REFERENCES categories(id)
     )");
 
-    // Create categories table if it does not exist
+    // echo "Database and tables created successfully!\n";
 
-    echo("Successfully created : D"); //message para makita kung gumana
-    
     return $db;
-
 }
 
-function add_admin(): SQLite3
+
+function add_admin(): void
 {
-    // Insert admin (if not exists??)
+    $db = get_db();
 
-    echo("Successfully created and adminnn : D"); //message para makita kung gumana
+    // Check kung nag-eexist na yung admin
+    $check = $db->prepare("SELECT id FROM users WHERE role = 'admin' LIMIT 1");
+    $result = $check->execute()->fetchArray(SQLITE3_ASSOC);
+
+    if ($result) {
+        echo "Admin already exists.\n";
+        return;
+    }
+
+    //credentials ng admin
+    $username = "admin";
+    $email = "admin@example.com";
+    $password_hash = password_hash("helloworld", PASSWORD_DEFAULT);
+    $role = "admin";
+
+    $stmt = $db->prepare("
+        INSERT INTO users (username, email, password_hash, role)
+        VALUES (:username, :email, :password_hash, :role)
+    ");
+
+    $stmt->bindValue(":username", $username, SQLITE3_TEXT);
+    $stmt->bindValue(":email", $email, SQLITE3_TEXT);
+    $stmt->bindValue(":password_hash", $password_hash, SQLITE3_TEXT);
+    $stmt->bindValue(":role", $role, SQLITE3_TEXT);
+
+    $stmt->execute();
+
+    // echo "Admin account created successfully.\n";
 }
 
-get_db(); //try ko lang i-call dito para makita kung gumana
+get_db();
+// add_admin();
+?>
