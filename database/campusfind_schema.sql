@@ -1,4 +1,4 @@
--- CampusFind Database Schema
+-- CampusFind Database Schema/queries  
 -- Lost & Found Item Tracker System
 -- Created for WAD 1 & RWD Project
 
@@ -71,3 +71,4 @@ CREATE INDEX idx_users_email ON users(email);
 --     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 --     is_active BOOLEAN DEFAULT 1
 -- );
+
