@@ -8,7 +8,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = trim($_POST["password"]);
 
     $db = get_db();
-    $stmt = $db->prepare("SELECT id, username, email, password_hash FROM users WHERE email = ?");
+    $stmt = $db->prepare("SELECT id, username, email, password_hash, role FROM users WHERE email = ?");
     $stmt->bindValue(1, $email, SQLITE3_TEXT);
     $result = $stmt->execute();
     $user = $result->fetchArray(SQLITE3_ASSOC);
@@ -22,10 +22,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         ];
 
         if ($user["role"] === "admin") {
-            header("Location: admindashboard.php");
+            header("Location: interfaces/admin/dashboard_admin.php");
             exit;
         } else {
-            header("Location: userdashboard.php");
+            header("Location: interfaces/users/dashboard_user.php");
             exit;
         }
     }

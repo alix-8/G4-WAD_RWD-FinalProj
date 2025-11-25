@@ -13,3 +13,6 @@ A PHP + SQLite web application where students or staff can post items they lost 
 - Basic form validation and data sanitization (in log-in, log-out and posting items)
 - Mobile-First Design
 - Responsive design using HTML, CSS, and Bootstrap
+
+**Instruction on how to run**
+input php -S localhost:7000 on the terminal

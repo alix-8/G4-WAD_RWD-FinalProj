@@ -1,0 +1,59 @@
+/* Reusable header: dynamic for user/admin */
+:root {
+    /* ===== PRIMARY COLOR (BRAND) ===== */
+    --color-primary: #2289e6;     /* brilliant azure — buttons, header, footer, logo */
+
+
+    /* ===== FOR BUTTONS AND POP-UPS ===== */
+    --color-ui-accent: #afdccd;   /* pearl aqua — dashboard buttons + hover */
+    --color-ui-surface: #f8f8f8;  /* grey — popups, dropdown, sidebar, footer text */
+
+     /* ===== STATUS COLORS ===== */
+    --lost-color:    #ff0000;
+    --found-color:   #2289e6;
+    --claimed-color: #558d57;
+    --pending-color: #ffa629;
+}
+
+
+
+.navbar-brand {
+    font-size: 15px !important;
+    color: white;
+}
+
+nav {
+    background-color: var(--color-primary);
+}
+
+.navbar-toggler:focus,
+.navbar-toggler:active{
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.offcanvas {
+    width:40vw !important;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+    overflow: hidden;
+}
+
+.offcanvas-body {
+    background-color: var(--color-ui-surface);
+    display: flex;
+    flex-direction: column;
+}
+
+.offcanvas-body a{
+    text-decoration: none;
+    color: black;
+}
+
+.logout{
+    color: var(--lost-color) !important;
+}
+
+.offcanvas-body a{
+    margin: 5px 0 5px 0
+}
