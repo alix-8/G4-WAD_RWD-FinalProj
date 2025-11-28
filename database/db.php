@@ -34,6 +34,7 @@ function get_db(): SQLite3
         description TEXT,
         item_type TEXT NOT NULL,     -- 'lost' or 'found'
         category_id INTEGER,
+        location_lost TEXT,
         location_found TEXT,
         date_lost_or_found DATE,
         status TEXT DEFAULT 'open',  -- 'open', 'claimed', 'closed'

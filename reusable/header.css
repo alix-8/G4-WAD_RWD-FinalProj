@@ -1,4 +1,4 @@
-/* Reusable header css for user/admin */
+/* Reusable header, navigation and buttons css for user/admin */
 
 :root {
     /* ===== PRIMARY COLOR (BRAND) ===== */
@@ -16,8 +16,6 @@
     --pending-color: #ffa629;
 }
 
-
-
 .navbar-brand {
     font-size: 15px !important;
     color: white;
@@ -34,7 +32,7 @@ nav {
 }
 
 .offcanvas {
-    width:40vw !important;
+    width:200px !important;
     border-top-right-radius: 20px;
     border-bottom-right-radius: 20px;
     overflow: hidden;
