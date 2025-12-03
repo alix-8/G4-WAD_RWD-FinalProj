@@ -32,12 +32,11 @@ function get_db(): SQLite3
         user_id INTEGER NOT NULL,
         title TEXT NOT NULL,
         description TEXT,
-        item_type TEXT NOT NULL,     -- 'lost' or 'found'
+        item_status TEXT NOT NULL,     -- 'lost' or 'found'
         category_id INTEGER,
         location_lost TEXT,
         location_found TEXT,
         date_lost_or_found DATE,
-        status TEXT DEFAULT 'open',  -- 'open', 'claimed', 'closed'
         current_location TEXT,
         image_path TEXT,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -87,7 +86,7 @@ function add_admin(): void
 
     $stmt->execute();
 
-    // echo "Admin account created successfully.\n";
+    echo "Admin account created successfully.\n";
 }
 
 get_db();

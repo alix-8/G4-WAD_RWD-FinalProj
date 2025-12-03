@@ -16,6 +16,10 @@
     --pending-color: #ffa629;
 }
 
+* {
+    font-family: "Monsterrat", sans-serif;
+}
+
 .navbar-brand {
     font-size: 15px !important;
     color: white;
@@ -55,4 +59,9 @@ nav {
 
 .offcanvas-body a{
     margin: 5px 0 5px 0
+}
+
+/* para sa close button ng alert message */
+.alert .btn-close {
+    float: right;
 }
