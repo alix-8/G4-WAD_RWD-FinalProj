@@ -2,12 +2,14 @@
 
 :root {
     /* ===== PRIMARY COLOR (BRAND) ===== */
-    --color-primary: #2289e6;     /* brilliant azure — buttons, header, footer, logo */
-
+    --color-primary-gradient: linear-gradient(to right,  #ceede3,#afdccd, #2289e6);
+    --blue-primary: #2289e6;
 
     /* ===== FOR BUTTONS AND POP-UPS ===== */
-    --color-ui-accent: #afdccd;   /* pearl aqua — dashboard buttons + hover */
-    --color-ui-surface: #f8f8f8;  /* grey — popups, dropdown, sidebar, footer text */
+    --button: #afdccd;   /* pearl aqua — dashboard buttons + hover */
+    --button-hover: #ceede3;
+    --bg: #f8f8f8;  /* grey — popups, dropdown, sidebar, footer text */
+    --gray-text: #7b7979;
 
      /* ===== STATUS COLORS ===== */
     --lost-color:    #ff0000;
@@ -17,22 +19,68 @@
 }
 
 * {
-    font-family: "Monsterrat", sans-serif;
+    font-family: "Plus Jakarta Sans", sans-serif;
 }
 
 .navbar-brand {
-    font-size: 15px !important;
-    color: white;
+    font-size: 20px !important;
+}
+
+.find{
+    color: var(--blue-primary);
 }
 
 nav {
-    background-color: var(--color-primary);
+    background: var(--color-primary-gradient);
 }
 
 .navbar-toggler:focus,
 .navbar-toggler:active{
     outline: none !important;
     box-shadow: none !important;
+}
+
+#postItems {
+    background-color: var(--blue-primary);
+    width: 100%;
+}
+
+#postItems:focus,
+#postItems:active{
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+button.searchBtn {
+    background-color: var(--blue-primary) !important; 
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 8px;
+}
+
+.search-filter-container{
+    border: 1px solid #a9a8a8;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+#filterStatus, #filterCategory {
+    border-color: var(--blue-primary); 
+    padding: 8px 12px !important;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* button 'to para sa "see details" */
+#seeDetails {
+    color: black;
+    background-color: var(--button);
+    border: none;
+}
+
+#seeDetails:hover {
+    background-color: var(--button-hover);
 }
 
 .offcanvas {
@@ -43,7 +91,7 @@ nav {
 }
 
 .offcanvas-body {
-    background-color: var(--color-ui-surface);
+    background-color: var(--bg);
     display: flex;
     flex-direction: column;
 }
@@ -64,4 +112,12 @@ nav {
 /* para sa close button ng alert message */
 .alert .btn-close {
     float: right;
+}
+
+.card-text, .subtext {
+    color: var(--gray-text)
+}
+
+.heroSection {
+
 }

@@ -132,7 +132,6 @@ $result = $db->query("SELECT * FROM items ORDER BY id DESC");
 while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
     $items[] = $row;
 }
-
     
 ?>
 <!DOCTYPE html>
@@ -143,11 +142,11 @@ while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
     <link rel="stylesheet" href="../../reusable/header.css">
     <link rel="stylesheet" href="../../reusable/cards.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
     <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body class="m-0 border-0 bd-example">
-<nav class="navbar p-1 sticky-top">
+<nav class="navbar p-3 sticky-top">
     <div class="container-fluid">
         <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
                 data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions"
@@ -158,11 +157,12 @@ while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
              id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
             <div class="offcanvas-body">
                 <a href="dashboard_admin.php" id="active_button">Dashboard</a>
-                <a href="?action=create">Add Item</a>
+                <a href="myposts_admin.php">My Posts</a>
                 <a href="#">About</a>
                 <a class="logout" href="#">Log out</a>
             </div>
         </div>
+        <strong><a class="navbar-brand me-auto" href="#">Campus<span class = "find">Find</a></strong>
         <a class="navbar-brand ms-auto text-white" href="#">Hello, <?php echo htmlspecialchars($admin["username"]); ?></a>
     </div>
 </nav>
@@ -247,10 +247,41 @@ while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
     <!--main na dashboard talaga -->
         
         <!-- hero section -->
-        <section>
-            <h3>Dashboard</h3>
-
+        <section class = "heroSection pt-3">
+            <h1><strong>Dashboard</strong></h1>
+            <p class = "subtext">Browse and search lost & found items</p>
+            <a id = "postItems" type="button" class="btn btn-primary" href="?action=create">
+                Post Item
+            </a>
         </section>
+
+        <!-- searc + filter section hereee -->
+        <div class="search-filter-container my-2">
+    
+            <form class="d-flex py-2" role="search">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
+                <button class="btn searchBtn" type="submit">Search</button>
+            </form>
+
+            <div class = "filters d-flex col-md-2">
+                <select id="filterStatus" class="form-select m-2">
+                    <option value="">All</option>
+                    <option value="lost">Lost</option>
+                    <option value="found">Found</option>
+                    <option value="claimed">Claimed</option>
+                    <option value="pending">Pending</option>
+                </select>
+                    <select id="filterCategory" class="form-select m-2">
+                    <option value="">All</option>
+                    <option value="lost">Clothing</option>
+                    <option value="found">Electronic</option>
+                    <option value="claimed">ID/Cards</option>
+                    <option value="pending">Other</option>
+                </select>
+            </div>
+            
+        </div>
+            
 
         <!-- cards dito -->
         <div class="row">
@@ -266,7 +297,7 @@ while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
                                 <h5 class="card-title"><strong><?php echo htmlspecialchars($it["title"]); ?></strong></h5>
                                 <p class="card-text"><?php echo htmlspecialchars($it["description"]); ?></p>
                                 <!-- Button para sa modal -->
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-<?php echo $it['id']; ?>">
+                                <button id = "seeDetails" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-<?php echo $it['id']; ?>">
                                     See Details
                                 </button>
 
