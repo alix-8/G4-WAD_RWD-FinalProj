@@ -55,6 +55,42 @@ p {
   margin-bottom: 1.5rem;
 }
 
+.logo-img {
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  height: 20vh;
+}
+
+.wrapper-index {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+}
+
+.container-index {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: white;
+  padding: 2rem;
+  border-radius: 0.5rem;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  width: 100%;
+  max-width: 400px;
+}
+
+.box {
+  text-align: center;
+}
+
+.body-index {
+  flex-direction: column;
+  margin-top: -80px;
+}
+
 /* Form styles */
 form {
   display: flex;
