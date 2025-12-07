@@ -17,121 +17,50 @@ $action = $_GET["action"] ?? "list";
 $msg = $_GET["msg"] ?? "";
 $error = "";
 
-// logic ng add post
-if ($_SERVER["REQUEST_METHOD"] === "POST" && $action === "store") {
-    $title = trim($_POST["title"] ?? "");
-    $description = trim($_POST["description"] ?? "");
-    $item_status = trim($_POST["item_status"] ?? "");
-    $location_lost = trim($_POST["location_lost"] ?? "");
-    $location_found = trim($_POST["location_found"] ?? "");
-    $date_lost_or_found = trim($_POST["date_lost_or_found"] ?? "");
-    $current_location = trim($_POST["current_location"] ?? "");
-    // i-add na lang yung category id and image upload 
-
-    $user_id = $admin['id'];
-
-    if ($title !== "" && $item_status !== "") {
-        $stmt = $db->prepare("
-            INSERT INTO items 
-            (title, description, item_status, user_id, location_lost, location_found, date_lost_or_found, current_location) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        ");
-        $stmt->bindValue(1, $title, SQLITE3_TEXT);
-        $stmt->bindValue(2, $description, SQLITE3_TEXT);
-        $stmt->bindValue(3, $item_status, SQLITE3_TEXT);
-        $stmt->bindValue(4, $user_id, SQLITE3_INTEGER);
-        $stmt->bindValue(5, $location_lost, SQLITE3_TEXT);
-        $stmt->bindValue(6, $location_found, SQLITE3_TEXT);
-        $stmt->bindValue(7, $date_lost_or_found, SQLITE3_TEXT);
-        $stmt->bindValue(8, $current_location, SQLITE3_TEXT);
-        $stmt->execute();
-
-        header("Location: dashboard_admin.php?msg=Item+Added");
-        exit;
-    } else {
-        $error = "Title and Type are required.";
-        $action = "create";
-    }
-}
-
-
-//edit ng post
-if ($_SERVER["REQUEST_METHOD"] === "POST" && $action === "edit") {
-    $id = (int)($_POST['id'] ?? 0);
-
-    $title = trim($_POST['title'] ?? "");
-    $description = trim($_POST['description'] ?? "");
-    $item_status = trim($_POST['item_status'] ?? "");
-    $location_lost = trim($_POST['location_lost'] ?? "");
-    $location_found = trim($_POST['location_found'] ?? "");
-    $date_lost_or_found = trim($_POST['date_lost_or_found'] ?? "");
-    $current_location = trim($_POST['current_location'] ?? "");
-
-
-    if ($id > 0 && $title !== "" && $item_status !== "") {
-        $stmt = $db->prepare("
-            UPDATE items
-            SET title = ?, description = ?, item_status = ?, location_lost = ?, location_found = ?, date_lost_or_found = ?, current_location = ?
-            WHERE id = ?
-        ");
-        $stmt->bindValue(1, $title, SQLITE3_TEXT);
-        $stmt->bindValue(2, $description, SQLITE3_TEXT);
-        $stmt->bindValue(3, $item_status, SQLITE3_TEXT);
-        $stmt->bindValue(4, $location_lost, SQLITE3_TEXT);
-        $stmt->bindValue(5, $location_found, SQLITE3_TEXT);
-        $stmt->bindValue(6, $date_lost_or_found, SQLITE3_TEXT);
-        $stmt->bindValue(7, $current_location, SQLITE3_TEXT);
-        $stmt->bindValue(8, $id, SQLITE3_INTEGER);
-
-        $stmt->execute();
-
-        header("Location: dashboard_admin.php?msg=Item+Updated");
-        exit;
-    } else {
-        $error = "Title and Type are required.";
-        $action = "edit";
-        $_GET['id'] = (string)$id;
-    }
-}
-
-
-
-//delete item
-if ($action === "delete") {
-    $id = (int)($_GET["id"] ?? 0);
-    if ($id > 0) {
-        $stmt = $db->prepare("DELETE FROM items WHERE id = ?");
-        $stmt->bindValue(1, $id, SQLITE3_INTEGER);
-        $stmt->execute();
-
-        header("Location: dashboard_admin.php?msg=Item+Deleted");
-        exit;
-    }
-}
-
 // claim item
-if ($action === "claim") {
-    $id = (int)($_GET['id'] ?? 0);
+// if ($action === "claim") {
+//     $id = (int)($_GET['id'] ?? 0);
 
-    if ($id > 0) {
-        $stmt = $db->prepare("UPDATE items SET item_status = 'claimed' WHERE id = ?");
-        $stmt->bindValue(1, $id, SQLITE3_INTEGER);
-        $stmt->execute();
+//     if ($id > 0) {
+//         $stmt = $db->prepare("UPDATE items SET item_status = 'claimed' WHERE id = ?");
+//         $stmt->bindValue(1, $id, SQLITE3_INTEGER);
+//         $stmt->execute();
 
-        header("Location: dashboard_admin.php?msg=Item+Status+Updated+To+Claimed");
-        exit;
-    } else {
-        $error = "Invalid item ID for claiming.";
-    }
-}
+//         header("Location: dashboard_admin.php?msg=Item+Status+Updated+To+Claimed");
+//         exit;
+//     } else {
+//         $error = "Invalid item ID for claiming.";
+//     }
+// }
 
 
 //fetch items to display (else condition sa html)
-$items = [];
-$result = $db->query("SELECT * FROM items ORDER BY id DESC");
-while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
-    $items[] = $row;
+$where = [];
+
+if (!empty($_GET['search'])) {
+    $search = $db->escapeString($_GET['search']);
+    $where[] = "(title LIKE '%$search%' 
+                 OR description LIKE '%$search%'
+                 OR location_lost LIKE '%$search%'
+                 OR location_found LIKE '%$search%')";
 }
+
+if (!empty($_GET['item_status'])) {
+    $status = $db->escapeString($_GET['item_status']);
+    $where[] = "item_status = '$status'";
+}
+
+if (!empty($_GET['category_id'])) {
+    $cat = intval($_GET['category_id']);
+    $where[] = "category_id = $cat";
+}
+
+$sql = "SELECT * FROM items";
+if (!empty($where)) {
+    $sql .= " WHERE " . implode(" AND ", $where);
+}
+$sql .= " ORDER BY id DESC";
+
     
 ?>
 <!DOCTYPE html>
@@ -156,10 +85,9 @@ while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
         <div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1"
              id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
             <div class="offcanvas-body">
+                <a href="dashboard_user.php" id="active_button">Home</a>
                 <a href="dashboard_user.php" id="active_button">Dashboard</a>
-                <a href="myposts_admin.php">My Posts</a>
                 <a href="#">About</a>
-                <a class="logout" href="#">Log out</a>
             </div>
         </div>
         <strong><a class="navbar-brand me-auto" href="#">Campus<span class = "find">Find</a></strong>
@@ -179,111 +107,66 @@ while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>
     <?php endif; ?>
 
-    <?php if ($action === "create"): ?>
-        <!-- add post form -->
-        <h3>Add New Item</h3>
-        <form method="post" action="?action=store" enctype="multipart/form-data">
-            <input type="text" name="title" placeholder="Title" required>
-            <textarea name="description" placeholder="Description"></textarea>
-
-            <select name="item_status" id="status" required>
-            <option value="">Select Type</option>
-            <option value="lost">Lost</option>
-            <option value="found">Found</option>
-        </select>
-
-        <input type="text" name="location_lost" id="location_lost" placeholder="Location Lost">
-        <input type="text" name="location_found" id="location_found" placeholder="Location Found">
-
-        <label for="date_lost_or_found" id="dateLabel">Date Lost</label>
-        <input type="date" name="date_lost_or_found" id="date_lost_or_found">
-
-            <input type="text" name="current_location" placeholder="Current Location">
-
-            <button class="btn" type="submit">Save</button>
-            <a class="btn" href="dashboard_admin.php">Cancel</a>
-        </form>
-
-    <?php elseif ($action === "edit"): 
-        $id = (int)($_GET["id"] ?? 0);
-        $item = null;
-        foreach ($items as $it) {
-            if ($it["id"] === $id) $item = $it;
-        }
-        if ($item): ?>
-            <!--edit item form -->
-            <h3>Edit Item</h3>
-            <form method="post" action="?action=edit">
-        <input type="hidden" name="id" value="<?php echo (int)$item['id']; ?>">
-
-        <input type="text" name="title" placeholder="Title" value="<?php echo htmlspecialchars($item['title']); ?>" required>
-        <textarea name="description" placeholder="Description"><?php echo htmlspecialchars($item['description']); ?></textarea>
-
-        <select name="item_status" id = "status" required>
-            <option value="">Select Type</option>
-            <option value="lost" <?php if($item['item_status']=='lost') echo 'selected'; ?>>Lost</option>
-            <option value="found" <?php if($item['item_status']=='found') echo 'selected'; ?>>Found</option>
-        </select>
-
-        <input type="text" name="location_lost" id="location_lost" placeholder="Location Lost" value="<?php echo htmlspecialchars($item['location_lost']); ?>">
-        <input type="text" name="location_found" id="location_found" placeholder="Location Found" value="<?php echo htmlspecialchars($item['location_found']); ?>">
-
-        <label for="date_lost_or_found" id = "dateLabel">Date Lost</label>
-        <input type="date" name="date_lost_or_found" value="<?php echo $item['date_lost_or_found']; ?>">
-
-        <input type="text" name="current_location" placeholder="Current Location" value="<?php echo htmlspecialchars($item['current_location']); ?>">
-
-        <button class="btn" type="submit">Update</button>
-        <a class="btn" href="dashboard_admin.php">Cancel</a>
-    </form>
-
-
-        <?php else: ?>
-            <p>Item not found.</p>
-            <a class="btn btn-secondary" href="dashboard.php">Back</a>
-        <?php endif; ?>
-
-    <?php else: ?>
-    <!--main na dashboard talaga -->
+        <!--main na dashboard talaga -->
         
         <!-- hero section -->
         <section class = "heroSection pt-3">
             <h1><strong>Dashboard</strong></h1>
             <p class = "subtext">Browse and search lost & found items</p>
-            <a id = "postItems" type="button" class="btn btn-primary" href="?action=create">
-                Post Item
-            </a>
         </section>
 
-        <!-- searc + filter section hereee -->
-        <div class="search-filter-container">
+        <!-- search + filter section hereee -->
+        <div class="search-filter-container my-2">
     
-            <form class="d-flex py-2" role="search">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
+            <form class="d-flex py-2 w-100" method="GET">
+                <input 
+                    class="form-control me-2" 
+                    type="search" 
+                    name="search"
+                    placeholder="Search (input any keyword e.g. color, item)" 
+                    value="<?php echo htmlspecialchars($_GET['search'] ?? ''); ?>"
+                />
                 <button class="btn searchBtn" type="submit">Search</button>
             </form>
 
-            <div class = "filters d-flex col-md-2">
-                <select id="filterStatus" class="form-select m-2">
-                    <option value="">All</option>
-                    <option value="lost">Lost</option>
-                    <option value="found">Found</option>
-                    <option value="claimed">Claimed</option>
-                    <option value="pending">Pending</option>
+
+            <form method="GET" class="d-flex">
+                <select name="item_status" class="form-select m-2 me-auto">
+                    <option value="">All Items</option>
+                    <option value="lost" <?php if(isset($_GET['item_status']) && $_GET['item_status']=="lost") echo "selected"; ?>>Lost</option>
+                    <option value="found" <?php if(isset($_GET['item_status']) && $_GET['item_status']=="found") echo "selected"; ?>>Found</option>
                 </select>
-                    <select id="filterCategory" class="form-select m-2">
-                    <option value="">All</option>
-                    <option value="lost">Clothing</option>
-                    <option value="found">Electronic</option>
-                    <option value="claimed">ID/Cards</option>
-                    <option value="pending">Other</option>
+
+                <button type="submit" class="btn btn-primary m-2">Filter</button>
+            </form>
+
+            <form method="GET" class="d-flex">
+                <select id="filterCategory" name="category_id" class="form-select m-2 me-auto">
+                    <option value="">All Categories</option>
+                    <?php 
+                    $catQuery = $db->query("SELECT * FROM categories ORDER BY name");
+                    while($row = $catQuery->fetchArray(SQLITE3_ASSOC)): ?>
+                        <option value="<?= $row['id']; ?>">
+                            <?= ucfirst(str_replace('_', ' ', $row['name'])); ?>
+                        </option>
+                    <?php endwhile; ?>
                 </select>
-            </div>
+
+
+                <button type="submit" class="btn btn-primary m-2">Filter</button>
+            </form>
             
         </div>
             
 
         <!-- cards dito -->
+        <?php
+        $result = $db->query($sql);
+        $items = [];
+        while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+            $items[] = $row;
+        } ?>
+
         <div class="row">
             <?php if (empty($items)): ?>
                 <p>No items found.</p>
@@ -334,16 +217,13 @@ while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
                                         </p>
                                     </div>
                                     <div class="modal-footer">
-                                        <?php if ($it['item_status'] !== 'claimed'): ?>
-                                            <a href="?action=claim&id=<?php echo (int)$it["id"]; ?>" onclick="return confirm('Are you sure you want to mark this item CLAIMED?');" class="btn btn-success">Claim</a>
+                                        <p>Is this yours? If you think it is, head to the Lost and Found Office, prove possesion and claim now!</p>
+                                        <a href="">Want to know if the office is open?</a>
+                                        <!-- <?php if ($it['item_status'] !== 'claimed'): ?>
+                                            <a href="?action=claim&id=<?php echo (int)$it["id"]; ?>" onclick="return confirm('Are you sure you want to request to CLAIM this item?');" class="btn btn-success">Request claim</a>
                                         <?php else: ?>
-                                            <button class="btn btn-secondary" disabled>Claimed</button>
-                                        <?php endif; ?>
-
-                                        
-                                        <a href="?action=edit&id=<?php echo (int)$it["id"]; ?>" class="btn btn-warning">Edit</a>
-                                        <a href="?action=delete&id=<?php echo (int)$it["id"]; ?>" class="btn btn-danger"
-                                   onclick="return confirm('Are you sure you want to delete this item?');">Delete</a>
+                                            <button class="btn btn-secondary" disabled>Claim Request Pending</button>
+                                        <?php endif; ?> -->
                                     </div>
                                     </div>
                                 </div>
@@ -355,7 +235,6 @@ while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
                 <?php endforeach; ?>
             <?php endif; ?>
         </div>
-    <?php endif; ?>
 </div>
 
 <script src="../../javascripts/form.js"></script>

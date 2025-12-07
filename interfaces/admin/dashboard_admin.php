@@ -193,9 +193,7 @@ $sql .= " ORDER BY items.id DESC";
              id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
             <div class="offcanvas-body">
                 <a href="dashboard_admin.php" id="active_button">Dashboard</a>
-                <a href="myposts_admin.php">My Posts</a>
-                <a href="#">About</a>
-                <a class="logout" href="#">Log out</a>
+                <a class="logout" href="/logout.php" onclick = "return confirm('Are you sure you want to LOG OUT?');">Log out</a>
             </div>
         </div>
         <strong><a class="navbar-brand me-auto" href="#">Campus<span class = "find">Find</a></strong>
@@ -339,7 +337,6 @@ $sql .= " ORDER BY items.id DESC";
                     <option value="">All Items</option>
                     <option value="lost" <?php if(isset($_GET['item_status']) && $_GET['item_status']=="lost") echo "selected"; ?>>Lost</option>
                     <option value="found" <?php if(isset($_GET['item_status']) && $_GET['item_status']=="found") echo "selected"; ?>>Found</option>
-                    <option value="pending" <?php if(isset($_GET['item_status']) && $_GET['item_status']=="pending") echo "selected"; ?>>Pending Claim</option>
                     <option value="claimed" <?php if(isset($_GET['item_status']) && $_GET['item_status']=="claimed") echo "selected"; ?>>Claimed</option>
                 </select>
 
