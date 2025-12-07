@@ -1,0 +1,16 @@
+/* jay-r dito ka mag-edit */
+:root {
+    /* ===== PRIMARY COLOR (BRAND) ===== */
+    --color-primary: #2289e6;     /* brilliant azure — buttons, header, footer, logo */
+
+
+    /* ===== FOR BUTTONS AND POP-UPS ===== */
+    --color-ui-accent: #afdccd;   /* pearl aqua — dashboard buttons + hover */
+    --color-ui-surface: #f8f8f8;  /* grey — popups, dropdown, sidebar, footer text */
+
+     /* ===== STATUS COLORS ===== */
+    --lost-color:    #ff0000;
+    --found-color:   #2289e6;
+    --claimed-color: #558d57;
+    --pending-color: #ffa629;
+}
