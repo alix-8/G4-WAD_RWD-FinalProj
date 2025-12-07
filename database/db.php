@@ -89,6 +89,27 @@ function add_admin(): void
     echo "Admin account created successfully.\n";
 }
 
+function add_categories(): void
+{
+    $db = get_db();
+
+    $stmt = $db->prepare("
+        INSERT INTO categories (name)
+        VALUES ('id_cards'),
+        ('electronics'),
+        ('stationery'),
+        ('bags_wallets'),
+        ('clothing_accessories'),
+        ('jewelry_personal'),
+        ('keys'),
+        ('sports_equipment'),
+        ('others')");
+
+    $stmt->execute();
+
+    echo "Categories inserted\n";
+}
 get_db();
+// add_categories()
 // add_admin();
 ?>

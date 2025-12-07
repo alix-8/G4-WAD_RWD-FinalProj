@@ -3,6 +3,8 @@
 <?php
 session_start();
 
+// require_once __DIR__ . "/../../reusable/filter.php";
+
 if (!isset($_SESSION["user"])) {
     header("Location: login.php");
     exit;
@@ -21,6 +23,7 @@ $error = "";
 if ($_SERVER["REQUEST_METHOD"] === "POST" && $action === "store") {
     $title = trim($_POST["title"] ?? "");
     $description = trim($_POST["description"] ?? "");
+    $category_id = intval($_POST["category_id"] ?? 0);
     $item_status = trim($_POST["item_status"] ?? "");
     $location_lost = trim($_POST["location_lost"] ?? "");
     $location_found = trim($_POST["location_found"] ?? "");
@@ -32,18 +35,18 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && $action === "store") {
 
     if ($title !== "" && $item_status !== "") {
         $stmt = $db->prepare("
-            INSERT INTO items 
-            (title, description, item_status, user_id, location_lost, location_found, date_lost_or_found, current_location) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO items (title, description, category_id, item_status, user_id, location_lost, location_found, date_lost_or_found, current_location)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         ");
         $stmt->bindValue(1, $title, SQLITE3_TEXT);
         $stmt->bindValue(2, $description, SQLITE3_TEXT);
-        $stmt->bindValue(3, $item_status, SQLITE3_TEXT);
-        $stmt->bindValue(4, $user_id, SQLITE3_INTEGER);
-        $stmt->bindValue(5, $location_lost, SQLITE3_TEXT);
-        $stmt->bindValue(6, $location_found, SQLITE3_TEXT);
-        $stmt->bindValue(7, $date_lost_or_found, SQLITE3_TEXT);
-        $stmt->bindValue(8, $current_location, SQLITE3_TEXT);
+        $stmt->bindValue(3, $category_id, SQLITE3_INTEGER);
+        $stmt->bindValue(4, $item_status, SQLITE3_TEXT);
+        $stmt->bindValue(5, $user_id, SQLITE3_INTEGER);
+        $stmt->bindValue(6, $location_lost, SQLITE3_TEXT);
+        $stmt->bindValue(7, $location_found, SQLITE3_TEXT);
+        $stmt->bindValue(8, $date_lost_or_found, SQLITE3_TEXT);
+        $stmt->bindValue(9, $current_location, SQLITE3_TEXT);
         $stmt->execute();
 
         header("Location: dashboard_admin.php?msg=Item+Added");
@@ -61,6 +64,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && $action === "edit") {
 
     $title = trim($_POST['title'] ?? "");
     $description = trim($_POST['description'] ?? "");
+    $category_id = intval($_POST["category_id"] ?? 0);
     $item_status = trim($_POST['item_status'] ?? "");
     $location_lost = trim($_POST['location_lost'] ?? "");
     $location_found = trim($_POST['location_found'] ?? "");
@@ -71,17 +75,18 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && $action === "edit") {
     if ($id > 0 && $title !== "" && $item_status !== "") {
         $stmt = $db->prepare("
             UPDATE items
-            SET title = ?, description = ?, item_status = ?, location_lost = ?, location_found = ?, date_lost_or_found = ?, current_location = ?
+            SET title = ?, description = ?, category_id = ?, item_status = ?, location_lost = ?, location_found = ?, date_lost_or_found = ?, current_location = ?
             WHERE id = ?
         ");
         $stmt->bindValue(1, $title, SQLITE3_TEXT);
         $stmt->bindValue(2, $description, SQLITE3_TEXT);
-        $stmt->bindValue(3, $item_status, SQLITE3_TEXT);
-        $stmt->bindValue(4, $location_lost, SQLITE3_TEXT);
-        $stmt->bindValue(5, $location_found, SQLITE3_TEXT);
-        $stmt->bindValue(6, $date_lost_or_found, SQLITE3_TEXT);
-        $stmt->bindValue(7, $current_location, SQLITE3_TEXT);
-        $stmt->bindValue(8, $id, SQLITE3_INTEGER);
+        $stmt->bindValue(3, $category_id, SQLITE3_TEXT);
+        $stmt->bindValue(4, $item_status, SQLITE3_TEXT);
+        $stmt->bindValue(5, $location_lost, SQLITE3_TEXT);
+        $stmt->bindValue(6, $location_found, SQLITE3_TEXT);
+        $stmt->bindValue(7, $date_lost_or_found, SQLITE3_TEXT);
+        $stmt->bindValue(8, $current_location, SQLITE3_TEXT);
+        $stmt->bindValue(9, $id, SQLITE3_INTEGER);
 
         $stmt->execute();
 
@@ -127,12 +132,41 @@ if ($action === "claim") {
 
 
 //fetch items to display (else condition sa html)
-$items = [];
-$result = $db->query("SELECT * FROM items ORDER BY id DESC");
-while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
-    $items[] = $row;
+
+$where = [];
+
+if (!empty($_GET['search'])) {
+    $search = $db->escapeString($_GET['search']);
+    $where[] = "(items.title LIKE '%$search%' 
+                 OR items.description LIKE '%$search%'
+                 OR items.location_lost LIKE '%$search%'
+                 OR items.location_found LIKE '%$search%')";
 }
-    
+
+if (!empty($_GET['category_id'])) {
+    $cat = intval($_GET['category_id']);
+    $where[] = "items.category_id = $cat";
+}
+
+if (!empty($_GET['item_status'])) {
+    $status = $db->escapeString($_GET['item_status']);
+    $where[] = "items.item_status = '$status'";
+}
+
+
+
+$sql = "SELECT items.*, categories.name AS category_name 
+        FROM items 
+        LEFT JOIN categories ON items.category_id = categories.id";
+
+if (!empty($where)) {
+    $sql .= " WHERE " . implode(" AND ", $where);
+}
+
+$sql .= " ORDER BY items.id DESC";
+
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -188,7 +222,20 @@ while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
             <input type="text" name="title" placeholder="Title" required>
             <textarea name="description" placeholder="Description"></textarea>
 
-            <select name="item_status" id="status" required>
+        <select name="category_id" id="category_id" required>
+            <option value="">Select Category</option>
+            <?php
+            $catQ = $db->query("SELECT * FROM categories ORDER BY name");
+            while($c = $catQ->fetchArray(SQLITE3_ASSOC)):
+            ?>
+                <option value="<?= $c['id']; ?>">
+                    <?= ucfirst(str_replace('_', ' ', $c['name'])); ?>
+                </option>
+            <?php endwhile; ?>
+        </select>
+
+
+        <select name="item_status" id="status" required>
             <option value="">Select Type</option>
             <option value="lost">Lost</option>
             <option value="found">Found</option>
@@ -208,10 +255,11 @@ while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
 
     <?php elseif ($action === "edit"): 
         $id = (int)($_GET["id"] ?? 0);
-        $item = null;
-        foreach ($items as $it) {
-            if ($it["id"] === $id) $item = $it;
-        }
+        $stmt = $db->prepare("SELECT * FROM items WHERE id = ?");
+        $stmt->bindValue(1, $id, SQLITE3_INTEGER);
+        $res = $stmt->execute();
+        $item = $res->fetchArray(SQLITE3_ASSOC);
+
         if ($item): ?>
             <!--edit item form -->
             <h3>Edit Item</h3>
@@ -219,6 +267,20 @@ while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
         <input type="hidden" name="id" value="<?php echo (int)$item['id']; ?>">
 
         <input type="text" name="title" placeholder="Title" value="<?php echo htmlspecialchars($item['title']); ?>" required>
+        <select name="category_id" required>
+            <option value="">Select Category</option>
+            <?php
+            $catQ = $db->query("SELECT * FROM categories ORDER BY name");
+            while($c = $catQ->fetchArray(SQLITE3_ASSOC)):
+            ?>
+                <option value="<?= $c['id']; ?>" 
+                    <?= ($item['category_id'] == $c['id']) ? 'selected' : '' ?>>
+                    <?= ucfirst(str_replace('_', ' ', $c['name'])); ?>
+                </option>
+            <?php endwhile; ?>
+        </select>
+
+
         <textarea name="description" placeholder="Description"><?php echo htmlspecialchars($item['description']); ?></textarea>
 
         <select name="item_status" id = "status" required>
@@ -253,39 +315,64 @@ while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
             <h1><strong>Dashboard</strong></h1>
             <p class = "subtext">Browse and search lost & found items</p>
             <a id = "postItems" type="button" class="btn btn-primary" href="?action=create">
-                Post Item
+                Post Item +
             </a>
         </section>
 
-        <!-- searc + filter section hereee -->
+        <!-- search + filter section hereee -->
         <div class="search-filter-container my-2">
     
-            <form class="d-flex py-2" role="search">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
+            <form class="d-flex py-2 w-100" method="GET">
+                <input 
+                    class="form-control me-2" 
+                    type="search" 
+                    name="search"
+                    placeholder="Search (input any keyword e.g. color, item)" 
+                    value="<?php echo htmlspecialchars($_GET['search'] ?? ''); ?>"
+                />
                 <button class="btn searchBtn" type="submit">Search</button>
             </form>
 
-            <div class = "filters d-flex col-md-2">
-                <select id="filterStatus" class="form-select m-2">
-                    <option value="">All</option>
-                    <option value="lost">Lost</option>
-                    <option value="found">Found</option>
-                    <option value="claimed">Claimed</option>
-                    <option value="pending">Pending</option>
+
+            <form method="GET" class="d-flex">
+                <select name="item_status" class="form-select m-2 me-auto">
+                    <option value="">All Items</option>
+                    <option value="lost" <?php if(isset($_GET['item_status']) && $_GET['item_status']=="lost") echo "selected"; ?>>Lost</option>
+                    <option value="found" <?php if(isset($_GET['item_status']) && $_GET['item_status']=="found") echo "selected"; ?>>Found</option>
+                    <option value="pending" <?php if(isset($_GET['item_status']) && $_GET['item_status']=="pending") echo "selected"; ?>>Pending Claim</option>
+                    <option value="claimed" <?php if(isset($_GET['item_status']) && $_GET['item_status']=="claimed") echo "selected"; ?>>Claimed</option>
                 </select>
-                    <select id="filterCategory" class="form-select m-2">
-                    <option value="">All</option>
-                    <option value="lost">Clothing</option>
-                    <option value="found">Electronic</option>
-                    <option value="claimed">ID/Cards</option>
-                    <option value="pending">Other</option>
+
+                <button type="submit" class="btn btn-primary m-2">Filter</button>
+            </form>
+
+            <form method="GET" class="d-flex">
+                <select id="filterCategory" name="category_id" class="form-select m-2 me-auto">
+                    <option value="">All Categories</option>
+                    <?php 
+                    $catQuery = $db->query("SELECT * FROM categories ORDER BY name");
+                    while($row = $catQuery->fetchArray(SQLITE3_ASSOC)): ?>
+                        <option value="<?= $row['id']; ?>">
+                            <?= ucfirst(str_replace('_', ' ', $row['name'])); ?>
+                        </option>
+                    <?php endwhile; ?>
                 </select>
-            </div>
+
+
+                <button type="submit" class="btn btn-primary m-2">Filter</button>
+            </form>
             
         </div>
             
 
         <!-- cards dito -->
+        <?php
+        $result = $db->query($sql);
+        $items = [];
+        while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+            $items[] = $row;
+        } ?>
+
         <div class="row">
             <?php if (empty($items)): ?>
                 <p>No items found.</p>

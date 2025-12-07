@@ -118,6 +118,7 @@ button.searchBtn {
     color: var(--gray-text)
 }
 
-.heroSection {
-
+.search-filter-container {
+    display: flex;
+    flex-wrap: wrap;
 }
