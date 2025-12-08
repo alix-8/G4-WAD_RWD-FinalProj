@@ -92,8 +92,7 @@ p {
 }
 
 .footer-index {
-  display: flex;
-  align-items: baseline;
+  margin-bottom: -50px;
 }
 
 /* Form styles */
