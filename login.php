@@ -39,6 +39,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
+    <link rel="icon" type="image/x-icon" href="../assets/search.png">
     <link rel="stylesheet" href="../reusable/style.css">
 </head>
 

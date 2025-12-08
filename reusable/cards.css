@@ -8,6 +8,7 @@
     /* ===== FOR BUTTONS AND POP-UPS ===== */
     --color-ui-accent: #afdccd;   /* pearl aqua — dashboard buttons + hover */
     --color-ui-surface: #f8f8f8;  /* grey — popups, dropdown, sidebar, footer text */
+        --gray-text: #7b7979;
 
      /* ===== STATUS COLORS ===== */
     --lost-color:    #ff0000;
@@ -40,6 +41,44 @@
     height: 100%;
     width: 150px;
     object-fit: cover;
+}
+
+.view{
+    width: 15px !important;
+    margin: 0 2px 4px 4px !important;
+}
+
+/* para to sa mga badge ng status */
+.badge.bg-lost { background: var(--lost-color) !important; }
+.badge.bg-found { background: var(--found-color) !important; }
+.badge.bg-claimed { background: var(--claimed-color) !important; }
+
+/* ito badge sa category */
+.category {
+    color: rgb(103, 103, 103) !important;
+    background-color: #f8f8f8;
+    border: 1px solid rgb(124, 124, 124);
+}
+
+.card-text strong, .details strong{
+    color: var(--gray-text);
+}
+
+.field{
+    margin: 10px 0 10px 0;
+}
+
+.card-text{
+    color: black;
+}
+
+.card-text 
+
+/* para sa no items found */
+.noItemFound {
+    display:flex;
+    align-items: center;
+    justify-content: center;
 }
 
 @media (min-width: 768px){

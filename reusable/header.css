@@ -30,7 +30,7 @@
     color: var(--blue-primary);
 }
 
-nav {
+nav{
     background: var(--color-primary-gradient);
 }
 
@@ -114,11 +114,20 @@ button.searchBtn {
     float: right;
 }
 
-.card-text, .subtext {
-    color: var(--gray-text)
+.subtext {
+    color: var(--gray-text);
 }
 
 .search-filter-container {
     display: flex;
     flex-wrap: wrap;
+}
+
+.form-select option{
+    background-color: var(--bg) !important;
+    border-radius: 8px !important;
+}
+
+.form-select option:hover{
+    background-color: var(--button) !important;
 }

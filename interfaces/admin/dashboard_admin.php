@@ -207,6 +207,7 @@ $sql .= " ORDER BY items.id DESC";
 <html lang="en">
 <head>
     <title>Dashboard</title>
+    <link rel="icon" type="image/x-icon" href="../../assets/search.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../../reusable/header.css">
@@ -485,7 +486,8 @@ $sql .= " ORDER BY items.id DESC";
             
         </div>
             
-        <!-- cards Display -->
+
+        <!-- cards dito -->
         <?php
         $result = $db->query($sql);
         $items = [];
@@ -495,10 +497,13 @@ $sql .= " ORDER BY items.id DESC";
 
         <div class="row">
             <?php if (empty($items)): ?>
-                <p>No items found.</p>
+                <p class = "noItemFound">No items found.</p>
             <?php else: ?>
+                <?php $itemCount = count($items);?>
+                <p>Showing <strong><?php echo $itemCount; ?></strong>  items.</p>
                 <?php foreach ($items as $it): ?>
-                    <div class="col-md-3">
+                    <div class="col-md-4">
+                        <!-- cardddd -->
                         <div class="card my-2">
                             <!-- IMAGE DISPLAY LOGIC -->
                             <?php if(!empty($it['image_path'])): ?>
@@ -510,64 +515,87 @@ $sql .= " ORDER BY items.id DESC";
 
                             <div class="card-body">
                                 <h5 class="card-title"><strong><?php echo htmlspecialchars($it["title"]); ?></strong></h5>
+
+                                <div class="d-flex gap-2 mb-2">
+                                    <span class="badge rounded-pill bg-<?php echo $it['item_status']; ?>">
+                                        <?php echo ucfirst($it["item_status"]); ?>
+                                    </span>
+                                    <?php if ($it["category_name"]): ?>
+                                    <span class="category badge rounded-pill">
+                                        <?php echo ucfirst(str_replace('_', ' ', $it["category_name"])); ?>
+                                    </span>
+                                    <?php endif; ?>
+                                </div>
+
                                 <p class="card-text"><?php echo htmlspecialchars($it["description"]); ?></p>
-                                
-                                <button id = "seeDetails" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-<?php echo $it['id']; ?>">
-                                    See Details
+                                <!-- Button para sa modal -->
+                                <button id = "seeDetails" type="button" class="btn btn-primary rounded-3 w-100" data-bs-toggle="modal" data-bs-target="#modal-<?php echo $it['id']; ?>">
+                                    <img class = "view" src="/assets/eye.png" alt="view" > See Details
                                 </button>
 
                                 <!-- Modal -->
                                 <div class="modal fade" id="modal-<?php echo $it['id']; ?>">
                                 <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-                                    <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Item Details</h1>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <!-- Modal Image -->
-                                        <?php if(!empty($it['image_path'])): ?>
-                                            <div class="mb-3" style="text-align:center;">
-                                                <img src="../../<?php echo htmlspecialchars($it['image_path']); ?>" style="max-width:100%; height:auto; border-radius:5px;">
+                                    <div class="modal-content mx-3">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title fs-5" id="staticBackdropLabel">
+                                                <strong><?php echo htmlspecialchars($it["title"]); ?></strong>
+                                            </h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            
+                                            <div class="d-flex gap-2 mb-2">
+                                                <span class="badge rounded-pill bg-<?php echo $it['item_status']; ?>">
+                                                    <?php echo ucfirst($it["item_status"]); ?>
+                                                </span>
+                                                <?php if ($it["category_name"]): ?>
+                                                <span class="category badge rounded-pill">
+                                                    <?php echo ucfirst(str_replace('_', ' ', $it["category_name"])); ?>
+                                                </span>
+                                                <?php endif; ?>
                                             </div>
-                                        <?php endif; ?>
 
-                                        <h5 class="card-title">
-                                            <strong><?php echo htmlspecialchars($it["title"]); ?></strong>
-                                        </h5>
-                                        <p class="card-text">
-                                            <strong>Description:</strong>
-                                            <?php echo htmlspecialchars($it["description"]); ?><br>
-                                        
-                                            <?php if ($it["item_status"] == "lost"): ?>
-                                                <strong>Location lost:</strong>
-                                                <?php echo htmlspecialchars($it["location_lost"]); ?>
-                                            <?php elseif ($it["item_status"] == "found"): ?>
-                                                <strong>Location found:</strong>
-                                                <?php echo htmlspecialchars($it["location_found"]); ?>
-                                            <?php endif; ?><br>
-                                        
-                                            <?php if ($it["item_status"] == "lost"): ?>
-                                                <strong>Date lost:</strong>
-                                            <?php elseif ($it["item_status"] == "found"): ?>
-                                                <strong>Date found:</strong>
-                                            <?php endif; ?>  
-                                            <?php echo htmlspecialchars($it["date_lost_or_found"]); ?> <br> 
-                                        </p>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <?php if ($it['item_status'] !== 'claimed'): ?>
-                                            <a href="?action=claim&id=<?php echo (int)$it["id"]; ?>" onclick="return confirm('Are you sure you want to mark this item CLAIMED?');" class="btn btn-success">Claim</a>
-                                        <?php else: ?>
-                                            <button class="btn btn-secondary" disabled>Claimed</button>
-                                        <?php endif; ?>
+                                            <p class="card-text">
+                                                <strong>Description</strong><br>
+                                                <?php echo htmlspecialchars($it["description"]); ?><br>
+                                                <div class = "details">
+                                                    <div class="field">
+                                                        <?php if ($it["item_status"] == "lost"): ?>
+                                                        <strong>Location lost <br></strong>
+                                                        <?php echo htmlspecialchars($it["location_lost"]); ?>
+                                                        <?php elseif ($it["item_status"] == "found"): ?>
+                                                            <strong>Location found <br></strong>
+                                                            <?php echo htmlspecialchars($it["location_found"]); ?>
+                                                        <?php endif; ?>
+                                                    </div>
+                                                    
+                                                    <div class="field">
+                                                        <?php if ($it["item_status"] == "lost"): ?>
+                                                        <strong>Date lost <br></strong>
+                                                        <?php elseif ($it["item_status"] == "found"): ?>
+                                                            <strong>Date found <br></strong>
+                                                        <?php endif; ?>  
+                                                        <?php echo htmlspecialchars($it["date_lost_or_found"]); ?> <br> 
+                                                    </div>
+                                                    
+                                                </div>
+                                            </p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <?php if ($it['item_status'] !== 'claimed'): ?>
+                                                <a href="?action=claim&id=<?php echo (int)$it["id"]; ?>" onclick="return confirm('Are you sure you want to mark this item CLAIMED?');" class="btn btn-success">Claim</a>
+                                            <?php else: ?>
+                                                <button class="btn btn-secondary" disabled>Claimed</button>
+                                            <?php endif; ?>
 
-                                        <a href="?action=edit&id=<?php echo (int)$it["id"]; ?>" class="btn btn-warning">Edit</a>
-                                        <a href="?action=delete&id=<?php echo (int)$it["id"]; ?>" class="btn btn-danger"
-                                   onclick="return confirm('Are you sure you want to delete this item?');">Delete</a>
+                                            
+                                            <a href="?action=edit&id=<?php echo (int)$it["id"]; ?>" class="btn btn-warning">Edit</a>
+                                            <a href="?action=delete&id=<?php echo (int)$it["id"]; ?>" class="btn btn-danger"
+                                    onclick="return confirm('Are you sure you want to delete this item?');">Delete</a>
+                                        </div>
+                                        </div>
                                     </div>
-                                    </div>
-                                </div>
                                 </div>
                                 
                             </div>
