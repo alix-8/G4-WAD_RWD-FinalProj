@@ -22,8 +22,8 @@
         <div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1"
              id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
             <div class="offcanvas-body">
-                <a href="dashboard_admin.php" id="active_button">Dashboard</a>
-                <a href="myposts_admin.php">My Posts</a>
+                <a href="dashboard_user.php" id="active_button">Dashboard</a>
+                <a href="myposts_user.php">My Posts</a>
                 <a href="#">About</a>
                 <a class="logout" href="#">Log out</a>
             </div>

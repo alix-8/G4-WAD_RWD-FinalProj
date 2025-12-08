@@ -20,7 +20,7 @@
                 <div class="offcanvas-body">
                     <a href="#">Dashboard</a>
                     <a href="#">My posts</a>
-                    <a href="#">About</a>
+                    <a href="about.php">About</a>
                     <a class = "logout" ref="#">Log out</a>
                 </div>
             </div>

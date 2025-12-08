@@ -91,6 +91,10 @@ p {
   margin-top: -80px;
 }
 
+.footer-index {
+  margin-bottom: -50px;
+}
+
 /* Form styles */
 form {
   display: flex;
