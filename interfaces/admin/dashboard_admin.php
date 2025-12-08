@@ -229,7 +229,7 @@ $sql .= " ORDER BY items.id DESC";
              id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
             <div class="offcanvas-body">
                 <a href="dashboard_admin.php" id="active_button">Dashboard</a>
-                <!-- FIXED LOGOUT PATH BELOW -->
+                <!-- FIXED LOGOUT PATH :D -->
                 <a class="logout" href="../../logout.php" onclick = "return confirm('Are you sure you want to LOG OUT?');">Log out</a>
             </div>
         </div>
@@ -318,10 +318,6 @@ $sql .= " ORDER BY items.id DESC";
                             <div class="date-card">
                                 <input type="date" name="date_lost_or_found" id="date_lost_or_found" style="border:none; background:transparent; padding:0;">
                             </div>
-                        </div>
-                        <div class="input-group-modern">
-                            <label>Current Location (If Found)</label>
-                            <input type="text" name="current_location" placeholder="e.g. Guard House / Admin Office">
                         </div>
                     </div>
 
@@ -507,7 +503,6 @@ $sql .= " ORDER BY items.id DESC";
                         <div class="card my-2">
                             <!-- IMAGE DISPLAY LOGIC -->
                             <?php if(!empty($it['image_path'])): ?>
-                                <!-- Go up 2 levels to find uploads folder -->
                                 <img src="../../<?php echo htmlspecialchars($it['image_path']); ?>" class="card-img-top" alt="Item image">
                             <?php else: ?>
                                 <img src="/assets/image.png" class="card-img-top" alt="Default image">
