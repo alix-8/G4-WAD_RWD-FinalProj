@@ -585,6 +585,7 @@ $sql .= " ORDER BY items.id DESC";
                             <div class="card-body">
                                 <h5 class="card-title"><strong><?php echo htmlspecialchars($it["title"]); ?></strong></h5>
 
+                                <!-- badgess -->
                                 <div class="d-flex gap-2 mb-2">
                                     <span class="badge rounded-pill bg-<?php echo $it['item_status']; ?>">
                                         <?php echo ucfirst($it["item_status"]); ?>
