@@ -91,6 +91,11 @@ p {
   margin-top: -80px;
 }
 
+.footer-index {
+  display: flex;
+  align-items: baseline;
+}
+
 /* Form styles */
 form {
   display: flex;
