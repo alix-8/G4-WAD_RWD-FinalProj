@@ -6,7 +6,7 @@ if (!isset($_SESSION["user"])) {
     exit;
 }
 
-$admin = $_SESSION["user"];
+$user = $_SESSION["user"];
 require_once __DIR__ . "/../../database/db.php";
 $db = get_db();
 
@@ -24,7 +24,7 @@ $error = "";
 //         $stmt->bindValue(1, $id, SQLITE3_INTEGER);
 //         $stmt->execute();
 
-//         header("Location: dashboard_admin.php?msg=Item+Status+Updated+To+Claimed");
+//         header("Location: dashboard_user.php?msg=Item+Status+Updated+To+Claimed");
 //         exit;
 //     } else {
 //         $error = "Invalid item ID for claiming.";
@@ -32,32 +32,105 @@ $error = "";
 // }
 
 
-//fetch items to display (else condition sa html)
+// ==========================================
+// LOGIC: ADD POST (STORE) + IMAGE UPLOAD
+// ==========================================
+if ($_SERVER["REQUEST_METHOD"] === "POST" && $action === "store") {
+    $title = trim($_POST["title"] ?? "");
+    $description = trim($_POST["description"] ?? "");
+    $category_id = intval($_POST["category_id"] ?? 0);
+    $item_status = trim($_POST["item_status"] ?? "");
+    $location_lost = trim($_POST["location_lost"] ?? "");
+    $location_found = trim($_POST["location_found"] ?? "");
+    $date_lost_or_found = trim($_POST["date_lost_or_found"] ?? "");
+    $current_location = trim($_POST["current_location"] ?? "");
+    $user_id = $user['id'];
+    
+    // --- IMAGE UPLOAD LOGIC START DITO ---
+    $image_path_db = null; // Default to null if no image uploaded
+
+    if (isset($_FILES['item_image']) && $_FILES['item_image']['error'] === UPLOAD_ERR_OK) {
+        $fileTmpPath = $_FILES['item_image']['tmp_name'];
+        $fileName = $_FILES['item_image']['name'];
+        $fileNameCmps = explode(".", $fileName);
+        $fileExtension = strtolower(end($fileNameCmps));
+
+        // Allowed extensions
+        $allowedfileExtensions = array('jpg', 'gif', 'png', 'jpeg', 'webp');
+
+        if (in_array($fileExtension, $allowedfileExtensions)) {
+            // Create a unique name to prevent overwriting
+            $newFileName = md5(time() . $fileName) . '.' . $fileExtension;
+            
+            $uploadFileDir = __DIR__ . '/../../uploads/';
+            $dest_path = $uploadFileDir . $newFileName;
+
+            if(move_uploaded_file($fileTmpPath, $dest_path)) {
+                // Success :D
+                $image_path_db = 'uploads/' . $newFileName; 
+            }
+        }
+    }
+    // --- IMAGE UPLOAD LOGIC END HEREE---
+
+    if ($title !== "" && $item_status !== "") {
+        $stmt = $db->prepare("
+            INSERT INTO items (title, description, category_id, item_status, user_id, location_lost, location_found, date_lost_or_found, current_location, image_path)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ");
+        $stmt->bindValue(1, $title, SQLITE3_TEXT);
+        $stmt->bindValue(2, $description, SQLITE3_TEXT);
+        $stmt->bindValue(3, $category_id, SQLITE3_INTEGER);
+        $stmt->bindValue(4, $item_status, SQLITE3_TEXT);
+        $stmt->bindValue(5, $user_id, SQLITE3_INTEGER);
+        $stmt->bindValue(6, $location_lost, SQLITE3_TEXT);
+        $stmt->bindValue(7, $location_found, SQLITE3_TEXT);
+        $stmt->bindValue(8, $date_lost_or_found, SQLITE3_TEXT);
+        $stmt->bindValue(9, $current_location, SQLITE3_TEXT);
+        $stmt->bindValue(10, $image_path_db, SQLITE3_TEXT); // Bind the image path
+        
+        $stmt->execute();
+
+        header("Location: dashboard_user.php?msg=Item+Added");
+        exit;
+    } else {
+        $error = "Title and Type are required.";
+        $action = "create";
+    }
+}
+
+// ==========================================
+// LOGIC: FETCH ITEMS (MERON NA SEARCH/FILTER)
+// ==========================================
 $where = [];
 
 if (!empty($_GET['search'])) {
     $search = $db->escapeString($_GET['search']);
-    $where[] = "(title LIKE '%$search%' 
-                 OR description LIKE '%$search%'
-                 OR location_lost LIKE '%$search%'
-                 OR location_found LIKE '%$search%')";
-}
-
-if (!empty($_GET['item_status'])) {
-    $status = $db->escapeString($_GET['item_status']);
-    $where[] = "item_status = '$status'";
+    $where[] = "(items.title LIKE '%$search%' 
+                 OR items.description LIKE '%$search%'
+                 OR items.location_lost LIKE '%$search%'
+                 OR items.location_found LIKE '%$search%')";
 }
 
 if (!empty($_GET['category_id'])) {
     $cat = intval($_GET['category_id']);
-    $where[] = "category_id = $cat";
+    $where[] = "items.category_id = $cat";
 }
 
-$sql = "SELECT * FROM items";
+if (!empty($_GET['item_status'])) {
+    $status = $db->escapeString($_GET['item_status']);
+    $where[] = "items.item_status = '$status'";
+}
+
+$sql = "SELECT items.*, categories.name AS category_name 
+        FROM items 
+        LEFT JOIN categories ON items.category_id = categories.id";
+
 if (!empty($where)) {
     $sql .= " WHERE " . implode(" AND ", $where);
 }
-$sql .= " ORDER BY id DESC";
+
+$sql .= " ORDER BY items.id DESC";
 
     
 ?>
@@ -70,6 +143,7 @@ $sql .= " ORDER BY id DESC";
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../../reusable/header.css">
     <link rel="stylesheet" href="../../reusable/cards.css">
+    <link rel="stylesheet" href="../../reusable/form.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
     <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
@@ -92,7 +166,7 @@ $sql .= " ORDER BY id DESC";
             </div>
         </div>
         <strong><a class="navbar-brand me-auto" href="#">Campus<span class = "find">Find</a></strong>
-        <a class="navbar-brand ms-auto text-white" href="#">Hello, <?php echo htmlspecialchars($admin["username"]); ?></a>
+        <a class="navbar-brand ms-auto text-white" href="#">Hello, <?php echo htmlspecialchars($user["username"]); ?></a>
     </div>
 </nav>
 
@@ -108,12 +182,104 @@ $sql .= " ORDER BY id DESC";
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>
     <?php endif; ?>
 
-        <!--main na dashboard talaga -->
+
+    <!-- ========================================== -->
+    <!-- CREATE FORM -->
+    <!-- ========================================== -->
+    <?php if ($action === "create"): ?>
+        <h3 class="mb-4" style="font-weight: 700; color: #334155;">Post New Item</h3>
         
+        <form method="post" action="?action=store" enctype="multipart/form-data">
+            <div class="form-grid-layout">
+                <!-- LEFT COLUMN -->
+                <div class="form-left">
+                    <!-- Title -->
+                    <div class="input-group-modern">
+                        <label>Item Name</label>
+                        <input type="text" name="title" placeholder="e.g. Blue Jansport Backpack" required>
+                    </div>
+
+                    <!-- Row: Status & Category -->
+                    <div class="form-row">
+                        <div class="input-group-modern">
+                            <label>Category</label>
+                            <select name="category_id" id="category_id" required>
+                                <option value="">Select Category</option>
+                                <?php
+                                $catQ = $db->query("SELECT * FROM categories ORDER BY name");
+                                while($c = $catQ->fetchArray(SQLITE3_ASSOC)):
+                                ?>
+                                    <option value="<?= $c['id']; ?>">
+                                        <?= ucfirst(str_replace('_', ' ', $c['name'])); ?>
+                                    </option>
+                                <?php endwhile; ?>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="input-group-modern">
+                        <label>Description</label>
+                        <textarea name="description" rows="3" placeholder="Describe the item (color, distinctive marks, brand)..."></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="input-group-modern">
+                            <label>Lost Location</label>
+                            <input type="text" name="location_lost" id="location_lost" placeholder="Where was it lost?">
+                        </div>
+                    </div>
+
+                    <!-- Date -->
+                    <div class="form-row">
+                        <div class="input-group-modern">
+                            <label id="dateLabel">Date Event</label>
+                            <div class="date-card">
+                                <input type="date" name="date_lost_or_found" id="date_lost_or_found" style="border:none; background:transparent; padding:0;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- buttonsss -->
+                    <div class="d-flex gap-2 mt-2">
+                        <button class="btn btn-primary w-50" type="submit">Publish Post</button>
+                        <a class="btn btn-secondary w-50" href="dashboard_user.php" style="background-color: #cbd5e1; color: #334155; border:none;">Cancel</a>
+                    </div>
+                </div>
+
+                <!-- RIGHT COLUMN: IMAGE UPLOAD -->
+                <div class="form-right">
+                    <div class="input-group-modern" style="height: 100%;">
+                        <label>Item Image</label>
+                        
+                        <div class="image-upload-wrapper">
+                            <input type="file" name="item_image" id="file-input-real" accept="image/*" onchange="previewImage(event)">
+                            
+                            <!-- The Preview Image -->
+                            <img id="image-preview" src="#" alt="Image Preview">
+
+                            <!-- The Placeholder UI -->
+                            <div class="upload-placeholder" id="upload-placeholder">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg>
+                                <p><strong>Click to Upload</strong><br>or drag and drop here</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </form>
+        
+        <!--main na dashboard talaga -->
+        <?php else: ?>
+
         <!-- hero section -->
         <section class = "heroSection pt-3">
             <h1><strong>Dashboard</strong></h1>
             <p class = "subtext">Browse and search lost & found items</p>
+            <a id = "postItems" type="button" class="btn btn-primary" href="?action=create">
+                Post Item +
+            </a>
         </section>
 
         <!-- search + filter section hereee -->
@@ -173,9 +339,8 @@ $sql .= " ORDER BY id DESC";
                 <p>No items found.</p>
             <?php else: ?>
                 <?php foreach ($items as $it): ?>
-                    <div class="col-md-4">
                         <!-- cardddd -->
-                        <div class="card my-2">
+                        <div class="card my-2 card-masonry">
                             <!-- IMAGE DISPLAY LOGIC -->
                             <?php if(!empty($it['image_path'])): ?>
                                 <img src="../../<?php echo htmlspecialchars($it['image_path']); ?>" class="card-img-top" alt="Item image">
@@ -241,8 +406,8 @@ $sql .= " ORDER BY id DESC";
                 <?php endforeach; ?>
             <?php endif; ?>
         </div>
+    <?php endif; ?>
 </div>
 
 <script src="../../javascripts/form.js"></script>
-</body>
-</html>
+</body></html>
