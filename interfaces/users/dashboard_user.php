@@ -1,5 +1,3 @@
-<!-- dashboard ng adminnn -->
-
 <?php
 session_start();
 

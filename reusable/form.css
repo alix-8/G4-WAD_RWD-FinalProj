@@ -1,23 +1,24 @@
-/* jay-r dito ka mag-edit */
+/* form.css - Modern Form Styling (Create & Edit Forms) */
+
 :root {
     /* ===== PRIMARY COLOR (BRAND) ===== */
-    --color-primary: #2289e6;     /* brilliant azure — buttons, header, footer, logo */
-
-
+    --color-primary: #2289e6;
+    
     /* ===== FOR BUTTONS AND POP-UPS ===== */
-    --color-ui-accent: #afdccd;   /* pearl aqua — dashboard buttons + hover */
-    --color-ui-surface: #f8f8f8;  /* grey — popups, dropdown, sidebar, footer text */
-
-     /* ===== STATUS COLORS ===== */
+    --color-ui-accent: #afdccd;
+    --color-ui-surface: #f8f8f8;
+    
+    /* ===== STATUS COLORS ===== */
     --lost-color:    #ff0000;
     --found-color:   #2289e6;
     --claimed-color: #558d57;
     --pending-color: #ffa629;
 }
-/* --- MODERN FORM LAYOUT --- */
+
+/* --- MODERN FORM LAYOUT (CREATE FORM) --- */
 .form-grid-layout {
     display: grid;
-    grid-template-columns: 2fr 1fr; /* Left takes 2/3, Right takes 1/3 */
+    grid-template-columns: 2fr 1fr;
     gap: 2rem;
     background: white;
     padding: 2rem;
@@ -55,6 +56,7 @@
     transition: all 0.2s ease;
     background: #f8fafc;
     font-size: 0.95rem;
+    color: #334155;
 }
 
 .input-group-modern input:focus, 
@@ -102,7 +104,7 @@
     text-align: center;
     color: #64748b;
     padding: 20px;
-    pointer-events: none; /* Let clicks pass through to label */
+    pointer-events: none;
 }
 
 .upload-placeholder svg {
@@ -138,7 +140,7 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    display: none; /* Hidden by default */
+    display: none;
     z-index: 5;
 }
 
@@ -153,12 +155,144 @@
     flex-direction: column;
 }
 
-/* Responsive: Stack on mobile */
+/* --- EDIT FORM WRAPPER (SINGLE COLUMN) --- */
+.edit-form-wrapper {
+    width: 100%;
+}
+
+.edit-form-wrapper h3 {
+    font-weight: 700;
+    color: #334155;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+}
+
+.edit-form-wrapper form {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+.edit-form-wrapper form input[type="text"],
+.edit-form-wrapper form input[type="date"],
+.edit-form-wrapper form select,
+.edit-form-wrapper form textarea {
+    padding: 12px 16px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    background: #f8fafc;
+    font-size: 0.95rem;
+    color: #334155;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.edit-form-wrapper form input[type="text"]:focus,
+.edit-form-wrapper form input[type="date"]:focus,
+.edit-form-wrapper form select:focus,
+.edit-form-wrapper form textarea:focus {
+    border-color: var(--color-primary);
+    background: white;
+    box-shadow: 0 0 0 3px rgba(34, 137, 230, 0.1);
+    outline: none;
+}
+
+.edit-form-wrapper form label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.edit-form-wrapper form textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+/* --- BUTTONS (BOTH FORMS) --- */
+.btn {
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-primary {
+    background-color: var(--color-primary);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #1b6fb8;
+    box-shadow: 0 4px 10px rgba(27, 111, 184, 0.3);
+    transform: translateY(-1px);
+}
+
+.btn-secondary {
+    background-color: #cbd5e1;
+    color: #334155;
+}
+
+.btn-secondary:hover {
+    background-color: #b8c5d8;
+}
+
+.w-50 {
+    width: 50%;
+}
+
+.d-flex {
+    display: flex;
+}
+
+.gap-2 {
+    gap: 0.5rem;
+}
+
+.mt-2 {
+    margin-top: 0.5rem;
+}
+
+.mb-4 {
+    margin-bottom: 1.5rem;
+}
+
+/* --- RESPONSIVE: Stack on mobile --- */
 @media (max-width: 768px) {
     .form-grid-layout {
         grid-template-columns: 1fr;
     }
+
     .image-upload-wrapper {
         min-height: 200px;
+    }
+
+    .form-row {
+        flex-direction: column;
+    }
+
+    .d-flex {
+        flex-direction: column;
+    }
+
+    .w-50 {
+        width: 100%;
+    }
+
+    .edit-form-wrapper form {
+        padding: 1.5rem;
     }
 }

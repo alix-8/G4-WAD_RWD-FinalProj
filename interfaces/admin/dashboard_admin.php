@@ -94,7 +94,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && $action === "store") {
 
 // ==========================================
 // LOGIC: EDIT POST
-// ==========================================
+// ==========================================x
 if ($_SERVER["REQUEST_METHOD"] === "POST" && $action === "edit") {
     $id = (int)($_POST['id'] ?? 0);
 
@@ -383,54 +383,107 @@ $sql .= " ORDER BY items.id DESC";
     <!-- EDIT FORM -->
     <!-- ========================================== -->
     <?php elseif ($action === "edit"): 
-        $id = (int)($_GET["id"] ?? 0);
-        $stmt = $db->prepare("SELECT * FROM items WHERE id = ?");
-        $stmt->bindValue(1, $id, SQLITE3_INTEGER);
-        $res = $stmt->execute();
-        $item = $res->fetchArray(SQLITE3_ASSOC);
+    $id = (int)($_GET["id"] ?? 0);
+    $stmt = $db->prepare("SELECT * FROM items WHERE id = ?");
+    $stmt->bindValue(1, $id, SQLITE3_INTEGER);
+    $res = $stmt->execute();
+    $item = $res->fetchArray(SQLITE3_ASSOC);
 
-        if ($item): ?>
-            <h3>Edit Item</h3>
+    if ($item): ?>
+        <div class="edit-form-wrapper">
+            <h3 class="mb-4">Edit Item</h3>
             <form method="post" action="?action=edit">
                 <input type="hidden" name="id" value="<?php echo (int)$item['id']; ?>">
 
-                <input type="text" name="title" placeholder="Title" value="<?php echo htmlspecialchars($item['title']); ?>" required>
-                <select name="category_id" required>
-                    <option value="">Select Category</option>
-                    <?php
-                    $catQ = $db->query("SELECT * FROM categories ORDER BY name");
-                    while($c = $catQ->fetchArray(SQLITE3_ASSOC)):
-                    ?>
-                        <option value="<?= $c['id']; ?>" 
-                            <?= ($item['category_id'] == $c['id']) ? 'selected' : '' ?>>
-                            <?= ucfirst(str_replace('_', ' ', $c['name'])); ?>
-                        </option>
-                    <?php endwhile; ?>
-                </select>
+                <!-- Title -->
+                <div class="input-group-modern">
+                    <label>Item Name</label>
+                    <input type="text" name="title" placeholder="e.g. Blue Jansport Backpack" 
+                           value="<?php echo htmlspecialchars($item['title']); ?>" required>
+                </div>
 
-                <textarea name="description" placeholder="Description"><?php echo htmlspecialchars($item['description']); ?></textarea>
+                <!-- Status & Category Row -->
+                <div class="form-row">
+                    <div class="input-group-modern">
+                        <label>Status</label>
+                        <select name="item_status" id="status" required>
+                            <option value="">Select Status</option>
+                            <option value="lost"  <?php if($item['item_status']=='lost')  echo 'selected'; ?>>Lost</option>
+                            <option value="found" <?php if($item['item_status']=='found') echo 'selected'; ?>>Found</option>
+                        </select>
+                    </div>
+                    <div class="input-group-modern">
+                        <label>Category</label>
+                        <select name="category_id" id="category_id" required>
+                            <option value="">Select Category</option>
+                            <?php
+                            $catQ = $db->query("SELECT * FROM categories ORDER BY name");
+                            while($c = $catQ->fetchArray(SQLITE3_ASSOC)):
+                            ?>
+                                <option value="<?= $c['id']; ?>" 
+                                    <?= ($item['category_id'] == $c['id']) ? 'selected' : '' ?>>
+                                    <?= ucfirst(str_replace('_', ' ', $c['name'])); ?>
+                                </option>
+                            <?php endwhile; ?>
+                        </select>
+                    </div>
+                </div>
 
-                <select name="item_status" id = "status" required>
-                    <option value="">Select Type</option>
-                    <option value="lost" <?php if($item['item_status']=='lost') echo 'selected'; ?>>Lost</option>
-                    <option value="found" <?php if($item['item_status']=='found') echo 'selected'; ?>>Found</option>
-                </select>
+                <!-- Description -->
+                <div class="input-group-modern">
+                    <label>Description</label>
+                    <textarea name="description" rows="3" 
+                              placeholder="Describe the item (color, distinctive marks, brand)..."><?php 
+                        echo htmlspecialchars($item['description']); ?></textarea>
+                </div>
 
-                <input type="text" name="location_lost" id="location_lost" placeholder="Location Lost" value="<?php echo htmlspecialchars($item['location_lost']); ?>">
-                <input type="text" name="location_found" id="location_found" placeholder="Location Found" value="<?php echo htmlspecialchars($item['location_found']); ?>">
+                <!-- Locations Row -->
+                <div class="form-row">
+                    <div class="input-group-modern">
+                        <label>Lost Location</label>
+                        <input type="text" name="location_lost" id="location_lost" 
+                               placeholder="Where was it lost?"
+                               value="<?php echo htmlspecialchars($item['location_lost']); ?>">
+                    </div>
+                    <div class="input-group-modern">
+                        <label>Found Location</label>
+                        <input type="text" name="location_found" id="location_found" 
+                               placeholder="Where was it found?"
+                               value="<?php echo htmlspecialchars($item['location_found']); ?>">
+                    </div>
+                </div>
 
-                <label for="date_lost_or_found" id = "dateLabel">Date Lost</label>
-                <input type="date" name="date_lost_or_found" value="<?php echo $item['date_lost_or_found']; ?>">
+                <!-- Date & Current Location Row -->
+                <div class="form-row">
+                    <div class="input-group-modern">
+                        <label id="dateLabel">Date Event</label>
+                        <div class="date-card">
+                            <input type="date" name="date_lost_or_found" id="date_lost_or_found"
+                                   value="<?php echo htmlspecialchars($item['date_lost_or_found']); ?>"
+                                   style="border:none; background:transparent; padding:0;">
+                        </div>
+                    </div>
+                    <div class="input-group-modern">
+                        <label>Current Location (If Found)</label>
+                        <input type="text" name="current_location" 
+                               placeholder="e.g. Guard House / Admin Office"
+                               value="<?php echo htmlspecialchars($item['current_location']); ?>">
+                    </div>
+                </div>
 
-                <input type="text" name="current_location" placeholder="Current Location" value="<?php echo htmlspecialchars($item['current_location']); ?>">
-
-                <button class="btn" type="submit">Update</button>
-                <a class="btn" href="dashboard_admin.php" style="background-color: #6c757d;">Cancel</a>
+                <!-- Buttons -->
+                <div class="d-flex gap-2 mt-2">
+                    <button class="btn btn-primary w-50" type="submit">Update Item</button>
+                    <a class="btn btn-secondary w-50" href="dashboard_admin.php">Cancel</a>
+                </div>
             </form>
-        <?php else: ?>
-            <p>Item not found.</p>
-            <a class="btn btn-secondary" href="dashboard_admin.php">Back</a>
-        <?php endif; ?>
+        </div>
+
+    <?php else: ?>
+        <p>Item not found.</p>
+        <a class="btn btn-secondary" href="dashboard_admin.php">Back</a>
+    <?php endif; ?>
+
 
     <!-- ========================================== -->
     <!-- DASHBOARD LIST VIEW -->
