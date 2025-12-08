@@ -66,6 +66,8 @@ $sql .= " ORDER BY id DESC";
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <title>Dashboard</title>
+    <link rel="icon" type="image/x-icon" href="../../assets/search.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../../reusable/header.css">
@@ -172,7 +174,7 @@ $sql .= " ORDER BY id DESC";
                 <p>No items found.</p>
             <?php else: ?>
                 <?php foreach ($items as $it): ?>
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <!-- cardddd -->
                         <div class="card my-2">
                             <img src="/assets/image.png" class="card-img-top" alt="Item image">
