@@ -88,6 +88,7 @@ $sql .= " ORDER BY id DESC";
                 <a href="dashboard_user.php" id="active_button">Home</a>
                 <a href="dashboard_user.php" id="active_button">Dashboard</a>
                 <a href="#">About</a>
+                <a class="logout" href="../../logout.php" onclick = "return confirm('Are you sure you want to LOG OUT?');">Log out</a>
             </div>
         </div>
         <strong><a class="navbar-brand me-auto" href="#">Campus<span class = "find">Find</a></strong>
@@ -175,7 +176,12 @@ $sql .= " ORDER BY id DESC";
                     <div class="col-md-4">
                         <!-- cardddd -->
                         <div class="card my-2">
-                            <img src="/assets/image.png" class="card-img-top" alt="Item image">
+                            <!-- IMAGE DISPLAY LOGIC -->
+                            <?php if(!empty($it['image_path'])): ?>
+                                <img src="../../<?php echo htmlspecialchars($it['image_path']); ?>" class="card-img-top" alt="Item image">
+                            <?php else: ?>
+                                <img src="/assets/image.png" class="card-img-top" alt="Default image">
+                            <?php endif; ?>
                             <div class="card-body">
                                 <h5 class="card-title"><strong><?php echo htmlspecialchars($it["title"]); ?></strong></h5>
                                 <p class="card-text"><?php echo htmlspecialchars($it["description"]); ?></p>
