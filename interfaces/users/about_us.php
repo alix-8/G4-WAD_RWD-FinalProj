@@ -18,7 +18,7 @@ $user = $_SESSION["user"];
     
     <!-- CSS FILES -->
     <link rel="stylesheet" href="../../reusable/header.css">
-    <link rel="stylesheet" href="../../reusable/about_us.css"> <!-- Make sure you created this CSS file! -->
+    <link rel="stylesheet" href="../../reusable/about_us.css"> 
     
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -45,7 +45,6 @@ $user = $_SESSION["user"];
                     <a href="myposts_user.php">My Posts</a>
                     
                     <!-- 3. ABOUT (This Page) -->
-                    <!-- I linked this to about_us.php since we are here now -->
                     <a href="about_us.php" style="color: #2289e6; font-weight: 700;">About</a>
                     
                     <!-- 4. LOG OUT -->
@@ -116,6 +115,71 @@ $user = $_SESSION["user"];
                     <div class="member-name">Mel Magdaraog</div>
                     <div class="member-role">Developer</div>
                 </div>
+            </div>
+        </div>
+
+        <!-- FAQ SECTION (ADDED HERE) -->
+        <div class="faq-section">
+            <h2>Frequently Asked Questions</h2>
+            
+            <div class="accordion" id="faqAccordion">
+                
+                <!-- Question 1 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                            How do I report a lost item?
+                        </button>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Go to the <strong>My Posts</strong> page and click "Report Lost Item". Fill in the details such as description, location lost, and upload a photo if you have one.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Question 2 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo">
+                            How do I claim a found item?
+                        </button>
+                    </h2>
+                    <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Browse the Dashboard for "Found" items. If you see something that belongs to you, click <strong>"See Details"</strong> and then click the Claim button (if enabled) or visit the Lost & Found office with proof of ownership.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Question 3 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree">
+                            Where is the Lost & Found office located?
+                        </button>
+                    </h2>
+                    <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            The main office is located at the <strong>Student Affairs Building, Room 101</strong>. We are open from 8:00 AM to 5:00 PM, Monday to Friday.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Question 4 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour">
+                            Can I delete my post after the item is found?
+                        </button>
+                    </h2>
+                    <div id="collapseFour" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Yes! Go to <strong>My Posts</strong>, find the item you posted, and click the "Delete" button. We recommend doing this once your item has been successfully recovered.
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
 
