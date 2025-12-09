@@ -155,7 +155,7 @@ $notifQuery = $db->query("
     SELECT notifications.*, items.title AS item_title
     FROM notifications
     LEFT JOIN items ON items.id = notifications.item_id
-    WHERE notifications.notify_to = $user_id AND notifications.type = 'to_user'
+    WHERE notifications.notify_to = $user_id AND notifications.type = 'to_user' AND notifications.status != 'resolved'
     ORDER BY notifications.created_at DESC
 ");
 
@@ -175,6 +175,7 @@ $where = [];
 // Logged-in user filter
 $currentUserId = $_SESSION["user"]["id"];
 $where[] = "items.user_id = $currentUserId";
+$where[] = "items.item_status != 'claimed'";
 
 if (!empty($_GET['search'])) {
     $search = $db->escapeString($_GET['search']);
@@ -247,7 +248,12 @@ $sql .= " ORDER BY items.id DESC";
             </div>
             <strong><a class="navbar-brand me-auto" href="#">Campus<span class = "find">Find</a></strong>
             
-            <?php $notifCount = $db->querySingle("SELECT COUNT(*) FROM notifications WHERE status = 'unread';");?>
+            <?php $userId = $_SESSION['user']['id']; 
+            $notifCount = $db->querySingle("
+                SELECT COUNT(*) 
+                FROM notifications 
+                WHERE status = 'unread' AND notify_to = $userId AND type = 'to_user'
+            ");?>
             <div class = "ms-auto">
                 <a href="myposts_user.php" class="text-white mx-4">
                     🔔 (<?= $notifCount ?>)
@@ -381,7 +387,7 @@ $sql .= " ORDER BY items.id DESC";
         </script>
 
     <!-- ========================================== -->
-    <!-- EDIT FORM -->
+    <!-- EDIT FORM SA BABA, NAK -->
     <!-- ========================================== -->
     <?php elseif ($action === "edit"): 
     $id = (int)($_GET["id"] ?? 0);
@@ -407,10 +413,6 @@ $sql .= " ORDER BY items.id DESC";
 
                 <!-- Status & Category Row -->
                 <div class="form-row">
-                    <div class="input-group-modern">
-                        <label>Status</label>
-
-                    </div>
                     <div class="input-group-modern">
                         <label>Category</label>
                         <select name="category_id" id="category_id" required>

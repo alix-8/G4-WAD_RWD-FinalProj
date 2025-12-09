@@ -183,6 +183,7 @@ $q = $db->query("
     LEFT JOIN items i ON n.item_id = i.id
     LEFT JOIN categories c ON i.category_id = c.id
     LEFT JOIN users u ON i.user_id = u.id
+    WHERE n.status != 'resolved'
     ORDER BY n.created_at DESC
 ");
 
@@ -264,7 +265,14 @@ $sql .= " ORDER BY items.id DESC";
             </div>
             <strong><a class="navbar-brand me-auto" href="#">Campus<span class = "find">Find</a></strong>
 
-            <?php $notifCount = $db->querySingle("SELECT COUNT(*) FROM notifications WHERE status = 'unread';");?>
+            <?php 
+            $adminId = $_SESSION['user']['id']; 
+            $notifCount = $db->querySingle("
+                SELECT COUNT(*) 
+                FROM notifications 
+                WHERE status = 'unread' AND notify_to = $adminId AND type = 'to_admin'
+            ");
+            ?>
             <div class = "ms-auto">
                 <a href="myposts_admin.php" class="text-white mx-4">
                     🔔 (<?= $notifCount ?>)
@@ -328,7 +336,6 @@ $sql .= " ORDER BY items.id DESC";
         </div>
             
         <!-- notifss -->
-
         <!-- card -->
         <div class="row mt-3">
             <h3><strong>My Notifications</strong></h3>

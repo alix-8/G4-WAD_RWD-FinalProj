@@ -205,6 +205,7 @@ if ($action === "delete") {
 // LOGIC: FETCH ITEMS (MERON NA SEARCH/FILTER)
 // ==========================================
 $where = [];
+$where[] = "items.item_status != 'claimed'";
 
 if (!empty($_GET['search'])) {
     $search = $db->escapeString($_GET['search']);
@@ -262,23 +263,24 @@ $sql .= " ORDER BY items.id DESC";
             <div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1"
                 id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
                 <div class="offcanvas-body">
-                    <!-- 1. DASHBOARD (Active) -->
-                    <!-- Added bold/color style here because we are ON the dashboard -->
+                    
                     <a href="dashboard_user.php" style="color: #2289e6; font-weight: 700;">Dashboard</a>
 
-                    <!-- 2. MY POSTS -->
                     <a href="myposts_user.php">My Posts</a>
 
-                    <!-- 3. ABOUT -->
                     <a href="about_us.php">About</a>
 
-                    <!-- 4. LOG OUT -->
                     <a class="logout" href="../../logout.php" onclick="return confirm('Are you sure you want to LOG OUT?');">Log out</a>
                 </div>
                 
             </div>
 
-            <?php $notifCount = $db->querySingle("SELECT COUNT(*) FROM notifications WHERE status = 'unread';");?>
+            <?php $userId = $_SESSION['user']['id']; 
+            $notifCount = $db->querySingle("
+                SELECT COUNT(*) 
+                FROM notifications 
+                WHERE status = 'unread' AND notify_to = $userId AND type = 'to_user'
+            ");?>
             <div class = "ms-auto">
                 <a href="myposts_user.php" class="text-white mx-4">
                     🔔 (<?= $notifCount ?>)

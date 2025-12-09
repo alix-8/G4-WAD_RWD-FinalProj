@@ -152,16 +152,24 @@ if ($action === "claim") {
     $id = (int)($_GET['id'] ?? 0);
 
     if ($id > 0) {
+
+        // Update item status to claimed
         $stmt = $db->prepare("UPDATE items SET item_status = 'claimed' WHERE id = ?");
         $stmt->bindValue(1, $id, SQLITE3_INTEGER);
         $stmt->execute();
 
-        header("Location: dashboard_admin.php?msg=Item+Status+Updated+To+Claimed");
+        // Delete related notifications
+        $deleteNotif = $db->prepare("UPDATE notifications SET status = 'resolved' WHERE item_id = ?");
+        $deleteNotif->bindValue(1, $id, SQLITE3_INTEGER);
+        $deleteNotif->execute();
+
+        header("Location: dashboard_admin.php?msg=Item+Claimed+And+Notification+Removed");
         exit;
     } else {
         $error = "Invalid item ID for claiming.";
     }
 }
+
 
 // ==========================================
 // LOGIC: Match found (Admin sends to user)
@@ -269,7 +277,15 @@ $sql .= " ORDER BY items.id DESC";
         </div>
         <strong><a class="navbar-brand me-auto" href="#">Campus<span class = "find">Find</a></strong>
 
-        <?php $notifCount = $db->querySingle("SELECT COUNT(*) FROM notifications WHERE status = 'unread';");?>
+        <?php 
+        $adminId = $_SESSION['user']['id']; 
+        $notifCount = $db->querySingle("
+            SELECT COUNT(*) 
+            FROM notifications 
+            WHERE status = 'unread' AND notify_to = $adminId AND type = 'to_admin'
+        ");
+        ?>
+
         <div class = "ms-auto">
             <a href="myposts_admin.php" class="text-white mx-4">
                 🔔 (<?= $notifCount ?>)

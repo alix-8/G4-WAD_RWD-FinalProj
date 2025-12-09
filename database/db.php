@@ -118,11 +118,11 @@ function create_notifications_table(): void
         CREATE TABLE IF NOT EXISTS notifications (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             item_id INTEGER,
-            user_id INTEGER,      -- sino nag triggered the notification
-            notify_to INTEGER,    -- who should receive
+            user_id INTEGER,      -- sino nag triggered ng notification
+            notify_to INTEGER,    -- cno dapat magre receive
             message TEXT,
             type TEXT,            -- 'to_admin' | 'to_user'
-            status TEXT DEFAULT 'unread', -- unread | read | resolved
+            status TEXT DEFAULT 'unread',
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         );
     ");
