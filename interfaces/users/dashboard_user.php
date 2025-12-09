@@ -41,13 +41,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && $action === "store") {
     $title = trim($_POST["title"] ?? "");
     $description = trim($_POST["description"] ?? "");
     $category_id = intval($_POST["category_id"] ?? 0);
-    $item_status = trim($_POST["item_status"] ?? "");
     $location_lost = trim($_POST["location_lost"] ?? "");
-    $location_found = trim($_POST["location_found"] ?? "");
     $date_lost_or_found = trim($_POST["date_lost_or_found"] ?? "");
-    $current_location = trim($_POST["current_location"] ?? "");
     $user_id = $_SESSION["user"]["id"];
 
+    // FORCE STATUS TO LOST
+    $item_status = "lost";
     
     // --- IMAGE UPLOAD LOGIC START DITO ---
     $image_path_db = null; // Default to null if no image uploaded
@@ -76,10 +75,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && $action === "store") {
     }
     // --- IMAGE UPLOAD LOGIC END HEREE---
 
-    if ($title !== "" && $item_status !== "") {
+     if ($title !== "") {
         $stmt = $db->prepare("
-            INSERT INTO items (title, description, category_id, item_status, user_id, location_lost, location_found, date_lost_or_found, current_location, image_path)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO items (title, description, category_id, item_status, user_id, location_lost, date_lost_or_found, image_path)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         ");
         $stmt->bindValue(1, $title, SQLITE3_TEXT);
         $stmt->bindValue(2, $description, SQLITE3_TEXT);
@@ -87,62 +86,103 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && $action === "store") {
         $stmt->bindValue(4, $item_status, SQLITE3_TEXT);
         $stmt->bindValue(5, $user_id, SQLITE3_INTEGER);
         $stmt->bindValue(6, $location_lost, SQLITE3_TEXT);
-        $stmt->bindValue(7, $location_found, SQLITE3_TEXT);
-        $stmt->bindValue(8, $date_lost_or_found, SQLITE3_TEXT);
-        $stmt->bindValue(9, $current_location, SQLITE3_TEXT);
-        $stmt->bindValue(10, $image_path_db, SQLITE3_TEXT); // Bind the image path
-        
+        $stmt->bindValue(7, $date_lost_or_found, SQLITE3_TEXT);
+        $stmt->bindValue(8, $image_path_db, SQLITE3_TEXT);
+
         $stmt->execute();
 
-        header("Location: dashboard_user.php?msg=Item+Added");
-        exit;
-    } else {
-        $error = "Title and Type are required.";
-        $action = "create";
-    }
+    $lastItemId = $db->lastInsertRowID();
+
+$notif = $db->prepare("
+    INSERT INTO notifications (item_id, user_id, notify_to, message, type)
+    VALUES (?, ?, ?, ?, ?)
+");
+
+$notif->bindValue(1, $lastItemId, SQLITE3_INTEGER);
+$notif->bindValue(2, $user_id, SQLITE3_INTEGER);
+$notif->bindValue(3, 1, SQLITE3_INTEGER); // 1 = admin ID (adjust if needed)
+$notif->bindValue(4, "User posted a lost item requiring review", SQLITE3_TEXT);
+$notif->bindValue(5, "to_admin", SQLITE3_TEXT);
+$notif->execute();
+
 }
 
 
 // ==========================================
-// LOGIC: EDIT POST ITO
-// ==========================================x
+// LOGIC: EDIT POST (USER CAN ONLY EDIT LOST ITEMS)
+// ==========================================
 if ($_SERVER["REQUEST_METHOD"] === "POST" && $action === "edit") {
+
     $id = (int)($_POST['id'] ?? 0);
 
     $title = trim($_POST['title'] ?? "");
     $description = trim($_POST['description'] ?? "");
     $category_id = intval($_POST["category_id"] ?? 0);
-    $item_status = trim($_POST['item_status'] ?? "");
     $location_lost = trim($_POST['location_lost'] ?? "");
-    $location_found = trim($_POST['location_found'] ?? "");
     $date_lost_or_found = trim($_POST['date_lost_or_found'] ?? "");
-    $current_location = trim($_POST['current_location'] ?? "");
 
-    if ($id > 0 && $title !== "" && $item_status !== "") {
-        $stmt = $db->prepare("
-            UPDATE items
-            SET title = ?, description = ?, category_id = ?, item_status = ?, location_lost = ?, location_found = ?, date_lost_or_found = ?, current_location = ?
-            WHERE id = ?
-        ");
+    // FORCE STATUS TO LOST
+    $item_status = "lost";
+
+    // Optionally update image if new one is uploaded
+    $newImagePath = null;
+    if (isset($_FILES['item_image']) && $_FILES['item_image']['error'] === UPLOAD_ERR_OK) {
+        $fileTmpPath = $_FILES['item_image']['tmp_name'];
+        $fileName = $_FILES['item_image']['name'];
+        $fileExtension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+
+        $allowed = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+
+        if (in_array($fileExtension, $allowed)) {
+            $newFileName = md5(time() . $fileName) . '.' . $fileExtension;
+            $destPath = __DIR__ . '/../../uploads/' . $newFileName;
+
+            if (move_uploaded_file($fileTmpPath, $destPath)) {
+                $newImagePath = 'uploads/' . $newFileName;
+            }
+        }
+    }
+
+    if ($id > 0 && $title !== "") {
+
+        // para sa new image uploaded
+        if ($newImagePath) {
+            $stmt = $db->prepare("
+                UPDATE items
+                SET title = ?, description = ?, category_id = ?, item_status = ?, location_lost = ?, date_lost_or_found = ?, image_path = ?
+                WHERE id = ?
+            ");
+            $stmt->bindValue(7, $newImagePath, SQLITE3_TEXT);
+            $stmt->bindValue(8, $id, SQLITE3_INTEGER);
+
+        } else {
+            // No new image
+            $stmt = $db->prepare("
+                UPDATE items
+                SET title = ?, description = ?, category_id = ?, item_status = ?, location_lost = ?, date_lost_or_found = ?
+                WHERE id = ?
+            ");
+            $stmt->bindValue(7, $id, SQLITE3_INTEGER);
+        }
+
         $stmt->bindValue(1, $title, SQLITE3_TEXT);
         $stmt->bindValue(2, $description, SQLITE3_TEXT);
-        $stmt->bindValue(3, $category_id, SQLITE3_INTEGER); // Fixed type to INTEGER
+        $stmt->bindValue(3, $category_id, SQLITE3_INTEGER);
         $stmt->bindValue(4, $item_status, SQLITE3_TEXT);
         $stmt->bindValue(5, $location_lost, SQLITE3_TEXT);
-        $stmt->bindValue(6, $location_found, SQLITE3_TEXT);
-        $stmt->bindValue(7, $date_lost_or_found, SQLITE3_TEXT);
-        $stmt->bindValue(8, $current_location, SQLITE3_TEXT);
-        $stmt->bindValue(9, $id, SQLITE3_INTEGER);
+        $stmt->bindValue(6, $date_lost_or_found, SQLITE3_TEXT);
 
         $stmt->execute();
 
         header("Location: dashboard_user.php?msg=Item+Updated");
         exit;
-    } else {
-        $error = "Title and Type are required.";
+    } 
+    else {
+        $error = "Title is required.";
         $action = "edit";
         $_GET['id'] = (string)$id;
     }
+}
 }
 
 // ==========================================
@@ -266,12 +306,6 @@ $sql .= " ORDER BY items.id DESC";
                     <!-- Row: Status & Category -->
                     <div class="form-row">
                         <div class="input-group-modern">
-                            <label>Status</label>
-                            <select name="item_status" id="status" required>
-                                <option value="">Select Status</option>
-                                <option value="lost">Lost</option>
-                                <option value="found">Found</option>
-                            </select>
                         </div>
                         <div class="input-group-modern">
                             <label>Category</label>
@@ -300,10 +334,6 @@ $sql .= " ORDER BY items.id DESC";
                         <div class="input-group-modern">
                             <label>Lost Location</label>
                             <input type="text" name="location_lost" id="location_lost" placeholder="Where was it lost?">
-                        </div>
-                        <div class="input-group-modern">
-                            <label>Found Location</label>
-                            <input type="text" name="location_found" id="location_found" placeholder="Where was it found?" disabled>
                         </div>
                     </div>
 
@@ -395,11 +425,7 @@ $sql .= " ORDER BY items.id DESC";
                 <div class="form-row">
                     <div class="input-group-modern">
                         <label>Status</label>
-                        <select name="item_status" id="status" required>
-                            <option value="">Select Status</option>
-                            <option value="lost"  <?php if($item['item_status']=='lost')  echo 'selected'; ?>>Lost</option>
-                            <option value="found" <?php if($item['item_status']=='found') echo 'selected'; ?>>Found</option>
-                        </select>
+
                     </div>
                     <div class="input-group-modern">
                         <label>Category</label>
@@ -434,12 +460,6 @@ $sql .= " ORDER BY items.id DESC";
                         <input type="text" name="location_lost" id="location_lost" 
                             placeholder="Where was it lost?"
                             value="<?php echo htmlspecialchars($item['location_lost']); ?>">
-                    </div>
-                    <div class="input-group-modern">
-                        <label>Found Location</label>
-                        <input type="text" name="location_found" id="location_found" 
-                            placeholder="Where was it found?"
-                            value="<?php echo htmlspecialchars($item['location_found']); ?>">
                     </div>
                 </div>
 
@@ -504,7 +524,7 @@ $sql .= " ORDER BY items.id DESC";
             <h1><strong>Dashboard</strong></h1>
             <p class = "subtext">Browse and search lost & found items</p>
             <a id = "postItems" type="button" class="btn btn-primary" href="?action=create">
-                Post Item +
+                Report Lost Item +
             </a>
         </section>
 

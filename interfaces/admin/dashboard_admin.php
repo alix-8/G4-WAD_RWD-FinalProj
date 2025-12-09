@@ -164,6 +164,42 @@ if ($action === "claim") {
     }
 }
 
+// ==========================================
+// LOGIC: Match foundd, magse-send ng notif to user
+// ==========================================
+if ($action === 'match_found' && isset($_GET['id'])) {
+    $item_id = (int)$_GET['id'];
+
+    $stmt = $db->prepare("
+        UPDATE items 
+        SET item_status = 'matched' 
+        WHERE id = ?
+    ");
+    $stmt->bindValue(1, $item_id, SQLITE3_INTEGER);
+    $stmt->execute();
+
+    // Notify the user
+    $userStmt = $db->querySingle("
+        SELECT user_id FROM items WHERE id = $item_id
+    ");
+
+    if ($userStmt) {
+        $notif = $db->prepare("
+            INSERT INTO notifications (item_id, user_id, notify_to, message, type)
+            VALUES (?, ?, ?, ?, ?)
+        ");
+        $notif->bindValue(1, $item_id, SQLITE3_INTEGER);
+        $notif->bindValue(2, $_SESSION['user']['id'], SQLITE3_INTEGER); // admin
+        $notif->bindValue(3, $userStmt, SQLITE3_INTEGER); // notify user
+        $notif->bindValue(4, "Admin found a match for your lost item!", SQLITE3_TEXT);
+        $notif->bindValue(5, "to_user", SQLITE3_TEXT);
+        $notif->execute();
+    }
+
+    header("Location: dashboard_admin.php?msg=Match+success");
+    exit;
+}
+
 
 // ==========================================
 // LOGIC: FETCH ITEMS (MERON NA SEARCH/FILTER)
@@ -227,12 +263,20 @@ $sql .= " ORDER BY items.id DESC";
              id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
             <div class="offcanvas-body">
                 <a href="dashboard_admin.php" id="active_button">Dashboard</a>
+                <a href="myposts_admin.php" id="active_button">My Feed</a>
                 <!-- FIXED LOGOUT PATH :D -->
                 <a class="logout" href="../../logout.php" onclick = "return confirm('Are you sure you want to LOG OUT?');">Log out</a>
             </div>
         </div>
         <strong><a class="navbar-brand me-auto" href="#">Campus<span class = "find">Find</a></strong>
-        <a class="navbar-brand ms-auto text-white" href="#">Hello, <?php echo htmlspecialchars($admin["username"]); ?></a>
+
+        <?php $notifCount = $db->querySingle("SELECT COUNT(*) FROM notifications WHERE status = 'unread';");?>
+        <div class = "ms-auto">
+            <a href="myposts_admin.php" class="text-white mx-4">
+                🔔 (<?= $notifCount ?>)
+            </a>
+            <a class="navbar-brand text-white" href="#">Hello, <?php echo htmlspecialchars($admin["username"]); ?></a>
+        </div>
     </div>
 </nav>
 
@@ -574,7 +618,7 @@ $sql .= " ORDER BY items.id DESC";
                 <?php $itemCount = count($items);?>
                 <p>Showing <strong><?php echo $itemCount; ?></strong>  items.</p>
                 <?php foreach ($items as $it): ?>
-                    <div class="col-md-4">
+                    <div class="col-md-4" id="item-<?= $it['id']; ?>">
                         <!-- cardddd -->
                         <div class="card my-2">
                             <!-- IMAGE DISPLAY LOGIC -->
@@ -659,6 +703,23 @@ $sql .= " ORDER BY items.id DESC";
                                             </p>
                                         </div>
                                         <div class="modal-footer">
+                                            <?php if (
+                                                $it['item_status'] !== 'matched' &&
+                                                $it['user_id'] != $_SESSION['user']['id'] // NOT admin's own post
+                                            ): ?>
+                                                <a href="?action=match_found&id=<?= (int)$it['id']; ?>"
+                                                class="btn btn-info mt-2"
+                                                onclick="return confirm('Mark this item as MATCH FOUND?');">
+                                                    Match Found
+                                                </a>
+
+                                            <?php elseif ($it['item_status'] === 'matched'): ?>
+                                                <span class="badge bg-success w-100 d-block text-center mt-2">
+                                                    Matched
+                                                </span>
+                                            <?php endif; ?>
+
+
                                             <?php if ($it['item_status'] !== 'claimed'): ?>
                                                 <a href="?action=claim&id=<?php echo (int)$it["id"]; ?>" onclick="return confirm('Are you sure you want to mark this item CLAIMED?');" class="btn btn-success">Claim</a>
                                             <?php else: ?>
