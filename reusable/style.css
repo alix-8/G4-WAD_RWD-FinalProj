@@ -301,3 +301,72 @@ thead {
   padding: 8px;
   margin: 0 0 8px 0;
 }
+
+/* Two-column layout */
+.wrapper {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+/* LEFT SIDE */
+.left {
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #fafafa;
+  margin: 0;
+  padding: 0;
+}
+
+/* RIGHT SIDE */
+.right {
+  width: 50%;
+  background: #007bff; /* Blue button color */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  
+  color: white;
+  text-align: center;
+  margin: 0;   /* remove any margin */
+  padding: 0;  /* remove padding */
+}
+
+/* Center image */
+.right img {
+  width: 130px;
+  height: 130px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-bottom: 1rem;
+}
+
+/* Quote / title */
+.right .title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+/* Small description */
+.right .desc {
+  font-size: 1rem;
+  opacity: 0.9;
+  max-width: 80%;
+  margin-bottom: 1rem;
+}
+
+/* Mobile responsive */
+@media (max-width: 850px) {
+  .wrapper {
+    flex-direction: column;
+  }
+  .left, .right {
+    width: 100%;
+  }
+}
