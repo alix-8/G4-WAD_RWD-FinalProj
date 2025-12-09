@@ -92,14 +92,14 @@ $user = $_SESSION["user"];
             
             <div class="team-grid">
                 <div class="team-member">
-                    <div class="avatar-circle">M</div>
-                    <div class="member-name">Mel</div>
-                    <div class="member-role">Developer</div>
+                    <div class="avatar-circle">A</div>
+                    <div class="member-name">Alexandrian Bon</div>
+                    <div class="member-role">Developer / Project Manager</div>
                 </div>
                 <div class="team-member">
-                    <div class="avatar-circle">J</div>
-                    <div class="member-name">Jay R Santos</div>
-                    <div class="member-role">Backend / DB</div>
+                    <div class="avatar-circle">A</div>
+                    <div class="member-name">Anne Stephanne Buenaflor</div>
+                    <div class="member-role">Developer / Designer</div>
                 </div>
                 <div class="team-member">
                     <div class="avatar-circle">J</div>
@@ -107,14 +107,14 @@ $user = $_SESSION["user"];
                     <div class="member-role">Logic / Backend</div>
                 </div>
                 <div class="team-member">
-                    <div class="avatar-circle">L</div>
-                    <div class="member-name">Leader Name</div>
-                    <div class="member-role">Project Manager</div>
+                    <div class="avatar-circle">J</div>
+                    <div class="member-name">Jay R Santos</div>
+                    <div class="member-role">Backend / DB</div>
                 </div>
                 <div class="team-member">
                     <div class="avatar-circle">M</div>
-                    <div class="member-name">Member 5</div>
-                    <div class="member-role">Designer / QA</div>
+                    <div class="member-name">Mel Magdaraog</div>
+                    <div class="member-role">Developer</div>
                 </div>
             </div>
         </div>
