@@ -1,0 +1,37 @@
+:root {
+    /* ===== PRIMARY COLOR (BRAND) ===== */
+    --color-primary-gradient: linear-gradient(to right,  #ceede3,#afdccd, #2289e6);
+    --blue-primary: #2289e6;
+
+    /* ===== FOR BUTTONS AND POP-UPS ===== */
+    --button: #afdccd;   /* pearl aqua — dashboard buttons + hover */
+    --button-hover: #ceede3;
+    --bg: #f8f8f8;  /* grey — popups, dropdown, sidebar, footer text */
+    --gray-text: #7b7979;
+
+     /* ===== STATUS COLORS ===== */
+    --lost-color:    #ff0000;
+    --found-color:   #2289e6;
+    --claimed-color: #558d57;
+    --pending-color: #ffa629;
+}
+
+.search-filter-container form {
+  display: flex !important;
+  flex-direction: row !important;
+}
+
+@media (min-width: 768px) {
+    
+    .heroSection {
+        display: grid !important;
+        grid-template-columns: 2fr 1fr;
+    }
+
+    #postItems{
+        margin-top: 2vh;
+        padding: 0.5rem;
+        width: 20vw;
+        height: min-content;
+    }
+}

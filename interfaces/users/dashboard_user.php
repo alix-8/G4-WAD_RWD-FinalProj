@@ -248,6 +248,7 @@ $sql .= " ORDER BY items.id DESC";
     <link rel="stylesheet" href="../../reusable/header.css">
     <link rel="stylesheet" href="../../reusable/cards.css">
     <link rel="stylesheet" href="../../reusable/form.css">
+    <link rel="stylesheet" href="../../reusable/hero.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
     <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
@@ -282,8 +283,8 @@ $sql .= " ORDER BY items.id DESC";
                 WHERE status = 'unread' AND notify_to = $userId AND type = 'to_user'
             ");?>
             <div class = "ms-auto">
-                <a href="myposts_user.php" class="text-white mx-4">
-                    🔔 (<?= $notifCount ?>)
+                <a href="myposts_user.php" class="notif mx-4">
+                    🔔<?= $notifCount ?>
                 </a>
                 <a class="navbar-brand text-white" href="#">Hello, <?php echo htmlspecialchars($user["username"]); ?></a>
             </div>
@@ -320,10 +321,8 @@ $sql .= " ORDER BY items.id DESC";
                         <input type="text" name="title" placeholder="e.g. Blue Jansport Backpack" required>
                     </div>
 
-                    <!-- Row: Status & Category -->
+                    <!-- Row: Category -->
                     <div class="form-row">
-                        <div class="input-group-modern">
-                        </div>
                         <div class="input-group-modern">
                             <label>Category</label>
                             <select name="category_id" id="category_id" required>
@@ -535,10 +534,12 @@ $sql .= " ORDER BY items.id DESC";
         
         <!-- hero section -->
         <section class = "heroSection pt-3">
-            <h1><strong>Dashboard</strong></h1>
-            <p class = "subtext">Browse and search lost & found items</p>
-            <a id = "postItems" type="button" class="btn btn-primary" href="?action=create">
-                Report Lost Item +
+            <div>
+                <h1><strong>My Posts</strong></h1>
+                <p class = "subtext">Review your posts and check your notification</p>
+            </div>
+            <a id = "postItems" type="button" class="btn btn-primary ms-auto" href="?action=create">
+                Post Item +
             </a>
         </section>
 
@@ -568,7 +569,7 @@ $sql .= " ORDER BY items.id DESC";
             </form>
 
             <form method="GET" class="d-flex">
-                <select id="filterCategory" name="category_id" class="form-select m-2 me-auto">
+                <select id="filterCategory" name="category_id" class="form-select m-2 me-auto w-100">
                     <option value="">All Categories</option>
                     <?php 
                     $catQuery = $db->query("SELECT * FROM categories ORDER BY name");

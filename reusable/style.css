@@ -55,33 +55,6 @@ p {
   margin-bottom: 1.5rem;
 }
 
-.logo-img {
-  display: flex;
-  justify-content: center;
-  align-items: start;
-  height: 20vh;
-}
-
-.wrapper-index {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 50vh;
-}
-
-.container-index {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: white;
-  padding: 2rem;
-  border-radius: 0.5rem;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-  width: 100%;
-  max-width: 400px;
-}
-
 .box {
   text-align: center;
 }
@@ -330,13 +303,13 @@ thead {
   /* down SIDEEE */
   .right, .left-register {
     width: 100%;
-    background: #007bff;
+    background: linear-gradient(to left,#afdccd, #2289e6);
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
     
-    color: white;
+    color: rgb(59, 58, 58);
     text-align: center;
     border-radius: 10px;
   }
@@ -356,6 +329,7 @@ thead {
 
     /* title */
   .right .title, .left-register .title {
+    color: #144e81;
     font-size: 1.3rem;
     font-weight: bold;
   }
@@ -422,15 +396,16 @@ thead {
   /* LEFT SIDE */
   .left-register {
     width: 50%;
-    background: #007bff; 
+    background: linear-gradient(to right, #afdccd, #2289e6); 
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    color: white;
+    color: rgb(59, 58, 58);
     text-align: center;
     padding: 0;
     margin: 0;
+    border-radius: 0%;
   }
 
   .left-register img {
