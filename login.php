@@ -64,7 +64,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <!-- RIGHT SIDE -->
         <div class="right">
-            <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBw8SERIRERIVERAQERAXFRASEhcPGA8PFREWFhUXHxYaHSggGiYmHRMVITEhJikrLi4vGB8zODMtNygtLisBCgoKDg0OGhAQGzIiICU3Ly0tLS0tLy0wLTA3Ly8tLS8tNy0tLS0vKy4tLS0rLSstLS8rLSstLy0uLS0yLS0rLf/AABEIAOEA4QMBIgACEQEDEQH..." 
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaXsBOBXzBjPE-gEZm7mH4U05TlK8mqI3VQ8RruSFQpg&s" 
                     alt="Right Side Image">
             <p></p>
             <h3>Find What You've Lost</h3>
