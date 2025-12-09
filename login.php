@@ -64,7 +64,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <!-- RIGHT SIDE -->
         <div class="right">
-            <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e" alt="Image">
+            <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBw8SERIRERIVERAQERAXFRASEhcPGA8PFREWFhUXHxYaHSggGiYmHRMVITEhJikrLi4vGB8zODMtNygtLisBCgoKDg0OGhAQGzIiICU3Ly0tLS0tLy0wLTA3Ly8tLS8tNy0tLS0vKy4tLS0rLSstLS8rLSstLy0uLS0yLS0rLf/AABEIAOEA4QMBIgACEQEDEQH..." 
+                    alt="Right Side Image">
+            <p></p>
             <h3>Find What You've Lost</h3>
             <p></p>
             <p class="subtext" style="color: white;">Join thousands of students and staff who have successfully<br>reunited with their lost belongings through CampusFind.</p>
