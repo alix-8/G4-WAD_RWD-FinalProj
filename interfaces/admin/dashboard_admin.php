@@ -1,13 +1,12 @@
 <?php
 session_start();
 
-// 1. SECURITY CHECK
+// SECURITY CHECK
 if (!isset($_SESSION["user"])) {
     header("Location: ../../login.php");
     exit;
 }
 
-// Ensure only admin can access
 if ($_SESSION["user"]["role"] !== 'admin') {
     header("Location: ../users/dashboard_user.php");
     exit;
@@ -34,9 +33,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && $action === "store") {
     $location_found = trim($_POST["location_found"] ?? "");
     $date_lost_or_found = trim($_POST["date_lost_or_found"] ?? "");
     $current_location = trim($_POST["current_location"] ?? "");
-    $user_id = $admin['id'];
+    $user_id = $_SESSION["user"]["id"];
     
-    // --- IMAGE UPLOAD LOGIC START ---
+    // --- IMAGE UPLOAD LOGIC START DITO ---
     $image_path_db = null; // Default to null if no image uploaded
 
     if (isset($_FILES['item_image']) && $_FILES['item_image']['error'] === UPLOAD_ERR_OK) {
@@ -52,20 +51,18 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && $action === "store") {
             // Create a unique name to prevent overwriting
             $newFileName = md5(time() . $fileName) . '.' . $fileExtension;
             
-            // Define the upload directory (Go up 2 levels to root -> uploads)
             $uploadFileDir = __DIR__ . '/../../uploads/';
             $dest_path = $uploadFileDir . $newFileName;
 
             if(move_uploaded_file($fileTmpPath, $dest_path)) {
-                // Success! Save this relative path to DB
+                // Success :D
                 $image_path_db = 'uploads/' . $newFileName; 
             }
         }
     }
-    // --- IMAGE UPLOAD LOGIC END ---
+    // --- IMAGE UPLOAD LOGIC END HEREE---
 
     if ($title !== "" && $item_status !== "") {
-        // Updated Query to include image_path
         $stmt = $db->prepare("
             INSERT INTO items (title, description, category_id, item_status, user_id, location_lost, location_found, date_lost_or_found, current_location, image_path)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -93,7 +90,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && $action === "store") {
 
 
 // ==========================================
-// LOGIC: EDIT POST
+// LOGIC: EDIT POST ITO
 // ==========================================x
 if ($_SERVER["REQUEST_METHOD"] === "POST" && $action === "edit") {
     $id = (int)($_POST['id'] ?? 0);
@@ -106,7 +103,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && $action === "edit") {
     $location_found = trim($_POST['location_found'] ?? "");
     $date_lost_or_found = trim($_POST['date_lost_or_found'] ?? "");
     $current_location = trim($_POST['current_location'] ?? "");
-    // Note: Image update logic is optional, skipping for simplicity unless requested
 
     if ($id > 0 && $title !== "" && $item_status !== "") {
         $stmt = $db->prepare("
@@ -136,7 +132,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && $action === "edit") {
 }
 
 // ==========================================
-// LOGIC: DELETE ITEM
+// LOGIC: DELETE ITEM HERE
 // ==========================================
 if ($action === "delete") {
     $id = (int)($_GET["id"] ?? 0);
@@ -151,7 +147,7 @@ if ($action === "delete") {
 }
 
 // ==========================================
-// LOGIC: CLAIM ITEM
+// LOGIC: CLAIM ITEMMMM
 // ==========================================
 if ($action === "claim") {
     $id = (int)($_GET['id'] ?? 0);
@@ -170,7 +166,7 @@ if ($action === "claim") {
 
 
 // ==========================================
-// LOGIC: FETCH ITEMS (SEARCH/FILTER)
+// LOGIC: FETCH ITEMS (MERON NA SEARCH/FILTER)
 // ==========================================
 $where = [];
 
@@ -192,9 +188,11 @@ if (!empty($_GET['item_status'])) {
     $where[] = "items.item_status = '$status'";
 }
 
-$sql = "SELECT items.*, categories.name AS category_name 
-        FROM items 
-        LEFT JOIN categories ON items.category_id = categories.id";
+$sql = "SELECT items.*, categories.name AS category_name, users.username AS posted_by
+        FROM items
+        LEFT JOIN categories ON items.category_id = categories.id
+        LEFT JOIN users ON users.id = items.user_id";
+
 
 if (!empty($where)) {
     $sql .= " WHERE " . implode(" AND ", $where);
@@ -251,7 +249,7 @@ $sql .= " ORDER BY items.id DESC";
     <?php endif; ?>
 
     <!-- ========================================== -->
-    <!-- CREATE FORM (MODERN REDESIGN) -->
+    <!-- CREATE FORM -->
     <!-- ========================================== -->
     <?php if ($action === "create"): ?>
         <h3 class="mb-4" style="font-weight: 700; color: #334155;">Post New Item</h3>
@@ -259,7 +257,7 @@ $sql .= " ORDER BY items.id DESC";
         <form method="post" action="?action=store" enctype="multipart/form-data">
             <div class="form-grid-layout">
                 
-                <!-- LEFT COLUMN: DETAILS -->
+                <!-- LEFT COLUMN -->
                 <div class="form-left">
                     <!-- Title -->
                     <div class="input-group-modern">
@@ -299,7 +297,7 @@ $sql .= " ORDER BY items.id DESC";
                         <textarea name="description" rows="3" placeholder="Describe the item (color, distinctive marks, brand)..."></textarea>
                     </div>
 
-                    <!-- Dynamic Locations (Handled by JS) -->
+                    <!-- Locations (nadi-disable ang isang field kapag di sya applicable) -->
                     <div class="form-row">
                         <div class="input-group-modern">
                             <label>Lost Location</label>
@@ -311,7 +309,7 @@ $sql .= " ORDER BY items.id DESC";
                         </div>
                     </div>
 
-                    <!-- Date & Current Location -->
+                    <!-- Date -->
                     <div class="form-row">
                         <div class="input-group-modern">
                             <label id="dateLabel">Date Event</label>
@@ -321,7 +319,7 @@ $sql .= " ORDER BY items.id DESC";
                         </div>
                     </div>
 
-                    <!-- Actions -->
+                    <!-- buttonsss -->
                     <div class="d-flex gap-2 mt-2">
                         <button class="btn btn-primary w-50" type="submit">Publish Post</button>
                         <a class="btn btn-secondary w-50" href="dashboard_admin.php" style="background-color: #cbd5e1; color: #334155; border:none;">Cancel</a>
@@ -334,10 +332,9 @@ $sql .= " ORDER BY items.id DESC";
                         <label>Item Image</label>
                         
                         <div class="image-upload-wrapper">
-                            <!-- The actual input is hidden via CSS, but covers the div -->
                             <input type="file" name="item_image" id="file-input-real" accept="image/*" onchange="previewImage(event)">
                             
-                            <!-- The Preview Image (Hidden initially) -->
+                            <!-- The Preview Image -->
                             <img id="image-preview" src="#" alt="Image Preview">
 
                             <!-- The Placeholder UI -->
@@ -354,26 +351,22 @@ $sql .= " ORDER BY items.id DESC";
 
         <!-- Inline JS for Image Preview -->
         <script>
-        function previewImage(event) {
-            const input = event.target;
-            const preview = document.getElementById('image-preview');
-            const placeholder = document.getElementById('upload-placeholder');
-            
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
+            function previewImage(event) {
+                const input = event.target;
+                const preview = document.getElementById('image-preview');
+                const placeholder = document.getElementById('upload-placeholder');
                 
-                reader.onload = function(e) {
-                    preview.src = e.target.result;
-                    preview.style.display = 'block'; // Show image
-                    placeholder.style.display = 'none'; // Hide text
+                if (input.files && input.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        preview.src = e.target.result;
+                        preview.style.display = 'block';
+                        placeholder.style.display = 'none';
+                    }
+                    reader.readAsDataURL(input.files[0]);
                 }
-                
-                reader.readAsDataURL(input.files[0]);
-            } else {
-                preview.style.display = 'none';
-                placeholder.style.display = 'block';
             }
-        }
+
         </script>
     <!-- ========================================== -->
     <!-- EDIT FORM -->
@@ -386,16 +379,18 @@ $sql .= " ORDER BY items.id DESC";
     $item = $res->fetchArray(SQLITE3_ASSOC);
 
     if ($item): ?>
-        <div class="edit-form-wrapper">
-            <h3 class="mb-4">Edit Item</h3>
-            <form method="post" action="?action=edit">
-                <input type="hidden" name="id" value="<?php echo (int)$item['id']; ?>">
+    
+        <h3 class="mb-4">Edit Item</h3>
+        <form method="post" action="?action=edit" enctype="multipart/form-data">
+            <div class="form-grid-layout">
+                <div class="form-left">
+                    <input type="hidden" name="id" value="<?php echo (int)$item['id']; ?>">
 
                 <!-- Title -->
                 <div class="input-group-modern">
                     <label>Item Name</label>
                     <input type="text" name="title" placeholder="e.g. Blue Jansport Backpack" 
-                           value="<?php echo htmlspecialchars($item['title']); ?>" required>
+                        value="<?php echo htmlspecialchars($item['title']); ?>" required>
                 </div>
 
                 <!-- Status & Category Row -->
@@ -424,12 +419,13 @@ $sql .= " ORDER BY items.id DESC";
                         </select>
                     </div>
                 </div>
-
+            
+                
                 <!-- Description -->
                 <div class="input-group-modern">
                     <label>Description</label>
                     <textarea name="description" rows="3" 
-                              placeholder="Describe the item (color, distinctive marks, brand)..."><?php 
+                            placeholder="Describe the item (color, distinctive marks, brand)..."><?php 
                         echo htmlspecialchars($item['description']); ?></textarea>
                 </div>
 
@@ -438,32 +434,26 @@ $sql .= " ORDER BY items.id DESC";
                     <div class="input-group-modern">
                         <label>Lost Location</label>
                         <input type="text" name="location_lost" id="location_lost" 
-                               placeholder="Where was it lost?"
-                               value="<?php echo htmlspecialchars($item['location_lost']); ?>">
+                            placeholder="Where was it lost?"
+                            value="<?php echo htmlspecialchars($item['location_lost']); ?>">
                     </div>
                     <div class="input-group-modern">
                         <label>Found Location</label>
                         <input type="text" name="location_found" id="location_found" 
-                               placeholder="Where was it found?"
-                               value="<?php echo htmlspecialchars($item['location_found']); ?>">
+                            placeholder="Where was it found?"
+                            value="<?php echo htmlspecialchars($item['location_found']); ?>">
                     </div>
                 </div>
 
-                <!-- Date & Current Location Row -->
+                <!-- Date -->
                 <div class="form-row">
                     <div class="input-group-modern">
                         <label id="dateLabel">Date Event</label>
                         <div class="date-card">
                             <input type="date" name="date_lost_or_found" id="date_lost_or_found"
-                                   value="<?php echo htmlspecialchars($item['date_lost_or_found']); ?>"
-                                   style="border:none; background:transparent; padding:0;">
+                                value="<?php echo htmlspecialchars($item['date_lost_or_found']); ?>"
+                                style="border:none; background:transparent; padding:0;">
                         </div>
-                    </div>
-                    <div class="input-group-modern">
-                        <label>Current Location (If Found)</label>
-                        <input type="text" name="current_location" 
-                               placeholder="e.g. Guard House / Admin Office"
-                               value="<?php echo htmlspecialchars($item['current_location']); ?>">
                     </div>
                 </div>
 
@@ -472,8 +462,41 @@ $sql .= " ORDER BY items.id DESC";
                     <button class="btn btn-primary w-50" type="submit">Update Item</button>
                     <a class="btn btn-secondary w-50" href="dashboard_admin.php">Cancel</a>
                 </div>
-            </form>
-        </div>
+            </div>
+
+            <div class="form-right">
+                <div class="input-group-modern" style="height: 100%;">
+                    <label>Item Image</label>
+
+                    <div class="image-upload-wrapper">
+
+                        <input type="file" name="item_image" id="file-input-real" accept="image/*" onchange="previewImage(event)">
+
+                        <?php if (!empty($item['image_path'])): ?>
+                            <img id="image-preview" 
+                                src="../../<?= htmlspecialchars($item['image_path']); ?>" 
+                                style="display:block; max-width:100%; border-radius:10px;">
+
+                        <?php else: ?>
+                            <img id="image-preview" src="#" style="display:none; max-width:100%; border-radius:10px;">
+                        <?php endif; ?>
+
+                        <div class="upload-placeholder" id="upload-placeholder"
+                            style="<?php if (!empty($item['image_path'])) echo 'display:none;'; ?>">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/>
+                            </svg>
+                            <p><strong>Click to Upload</strong><br>or drag and drop here</p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+            
+            
+        </form>
 
     <?php else: ?>
         <p>Item not found.</p>
@@ -563,7 +586,12 @@ $sql .= " ORDER BY items.id DESC";
 
                             <div class="card-body">
                                 <h5 class="card-title"><strong><?php echo htmlspecialchars($it["title"]); ?></strong></h5>
+                                <p class="posted-by">
+                                    Posted by: <strong><?= htmlspecialchars($it["posted_by"]); ?></strong>
+                                </p>
 
+
+                                <!-- badgess -->
                                 <div class="d-flex gap-2 mb-2">
                                     <span class="badge rounded-pill bg-<?php echo $it['item_status']; ?>">
                                         <?php echo ucfirst($it["item_status"]); ?>
