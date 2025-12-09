@@ -67,9 +67,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaXsBOBXzBjPE-gEZm7mH4U05TlK8mqI3VQ8RruSFQpg&s" 
                     alt="Magnifying Glass">
             <p></p>
-            <div class="title">Find What You've Lost</fiv>
+            <div class="title">Find What You've Lost</div>
             <p></p>
-            <div class="desc">Join thousands of students and staff who have successfully<br>reunited with their lost belongings through CampusFind.</div>
+            <div class="desc">Join thousands of students and staff who have successfully reunited with their lost belongings through CampusFind.</div>
         </div>
 
     </div>

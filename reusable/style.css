@@ -346,19 +346,18 @@ thead {
   margin-bottom: 1rem;
 }
 
-/* Quote / title */
+/* title */
 .right .title {
-  font-size: 1.5rem;
+  font-size: 1.6rem;
   font-weight: bold;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.3rem;
 }
 
 /* Small description */
 .right .desc {
   font-size: 1rem;
   opacity: 0.9;
-  max-width: 80%;
-  margin-bottom: 1rem;
+  max-width: 75%;
 }
 
 /* Wrapper for register */
