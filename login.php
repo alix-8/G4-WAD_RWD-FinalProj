@@ -47,7 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <div class="wrapper">
 
-        <!-- LEFT SIDE (your current login box) -->
+        <!-- LEFT SIDE -->
         <div class="left">
             <div class="container">
                 <h2>Login to Campus Find</h2>
@@ -64,10 +64,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <!-- RIGHT SIDE -->
         <div class="right">
-            <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e" alt="Image">
-            <h3>Find What You've Lost</h3>
-            <p class="subtext" style="color: white;">Join thousands of students and staff who have successfully
-                reunited with their lost belongings through CampusFind.</p>
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaXsBOBXzBjPE-gEZm7mH4U05TlK8mqI3VQ8RruSFQpg&s" 
+                    alt="Magnifying Glass">
+            <p></p>
+            <div class="title">Find What You've Lost</div>
+            <p></p>
+            <div class="desc">Join thousands of students and staff who have successfully reunited with their lost belongings through CampusFind.</div>
         </div>
 
     </div>

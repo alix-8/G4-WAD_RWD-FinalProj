@@ -346,27 +346,69 @@ thead {
   margin-bottom: 1rem;
 }
 
-/* Quote / title */
+/* title */
 .right .title {
-  font-size: 1.5rem;
+  font-size: 1.6rem;
   font-weight: bold;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.3rem;
 }
 
 /* Small description */
 .right .desc {
   font-size: 1rem;
   opacity: 0.9;
-  max-width: 80%;
+  max-width: 75%;
+}
+
+/* Wrapper for register */
+.wrapper-register {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+/* LEFT SIDE */
+.left-register {
+  width: 50%;
+  background: #007bff; 
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  text-align: center;
+  padding: 0;
+  margin: 0;
+}
+
+.left-register img {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 50%;
   margin-bottom: 1rem;
 }
 
-/* Mobile responsive */
-@media (max-width: 850px) {
-  .wrapper {
-    flex-direction: column;
-  }
-  .left, .right {
-    width: 100%;
-  }
+.left-register .title {
+  font-size: 1.6rem;
+  font-weight: bold;
+  margin-bottom: 0.3rem;
+}
+
+.left-register .desc {
+  font-size: 1rem;
+  opacity: 0.9;
+  max-width: 75%;
+}
+
+/* RIGHT SIDE */
+.right-register {
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #fafafa;
+  padding: 2rem;
 }
