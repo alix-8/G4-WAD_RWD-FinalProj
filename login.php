@@ -46,8 +46,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
 
     <div class="wrapper">
-        
-        <!-- LEFT SIDE -->
+
+        <!-- LEFT SIDE (your current login box) -->
         <div class="left">
             <div class="container">
                 <h2>Login to Campus Find</h2>
@@ -64,13 +64,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <!-- RIGHT SIDE -->
         <div class="right">
-            <img src="../assets/login-cover.jpg" alt="Login Image">
-            <p class="desc">CampusFind — Your campus companion.</p>
+            <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e" alt="Image">
+            <h3>“Your Campus, Your Finder.”</h3>
+            <p class="subtext">Locate anything on campus with speed and simplicity.</p>
         </div>
 
     </div>
-
+    
 </body>
+
 
 
 </html> 
