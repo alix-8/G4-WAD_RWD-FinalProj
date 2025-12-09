@@ -641,7 +641,11 @@ $sql .= " ORDER BY items.id DESC";
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">
-                                            
+                                            <?php if(!empty($it['image_path'])): ?>
+                                                <img src="../../<?php echo htmlspecialchars($it['image_path']); ?>" class="card-img-top" alt="Item image">
+                                            <?php else: ?>
+                                                <img src="/assets/image.png" class="card-img-top" alt="Default image">
+                                            <?php endif; ?>
                                             <div class="d-flex gap-2 mb-2">
                                                 <span class="badge rounded-pill bg-<?php echo $it['item_status']; ?>">
                                                     <?php echo ucfirst($it["item_status"]); ?>

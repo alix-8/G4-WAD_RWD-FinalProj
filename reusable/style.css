@@ -15,7 +15,7 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  padding: 1rem;
+  padding: 0px;
 }
 
 .container {
@@ -302,113 +302,164 @@ thead {
   margin: 0 0 8px 0;
 }
 
-/* Two-column layout */
-.wrapper {
-  display: flex;
-  width: 100%;
-  min-height: 100vh;
-  margin: 0;
-  padding: 0;
-}
+/* Two-row layout */
+  .wrapper {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    width: 100%;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+  }
 
-/* LEFT SIDE */
-.left {
-  width: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: #fafafa;
-  margin: 0;
-  padding: 0;
-}
+    /* up SIDE */
+  .left, .right-register  {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #fafafa;
+    margin: 0;
+    padding: 0;
+  }
 
-/* RIGHT SIDE */
-.right {
-  width: 50%;
-  background: #007bff; /* Blue button color */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  
-  color: white;
-  text-align: center;
-  margin: 0;   /* remove any margin */
-  padding: 0;  /* remove padding */
-}
+  .right-register{
+    padding: 2rem;
+  }
 
-/* Center image */
-.right img {
-  width: 130px;
-  height: 130px;
-  object-fit: cover;
-  border-radius: 50%;
-  margin-bottom: 1rem;
-}
+  /* down SIDEEE */
+  .right, .left-register {
+    width: 100%;
+    background: #007bff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    
+    color: white;
+    text-align: center;
+    border-radius: 10px;
+  }
 
-/* title */
-.right .title {
-  font-size: 1.6rem;
-  font-weight: bold;
-  margin-bottom: 0.3rem;
-}
+  .left-register{
+    padding: 2rem;
+    border-radius: 0 0 10px 10px;
+  }
 
-/* Small description */
-.right .desc {
-  font-size: 1rem;
-  opacity: 0.9;
-  max-width: 75%;
-}
+    /* Center image */
+  .right img, .left-register img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+  }
 
-/* Wrapper for register */
-.wrapper-register {
-  display: flex;
-  width: 100%;
-  min-height: 100vh;
-  margin: 0;
-  padding: 0;
-}
+    /* title */
+  .right .title, .left-register .title {
+    font-size: 1.3rem;
+    font-weight: bold;
+  }
 
-/* LEFT SIDE */
-.left-register {
-  width: 50%;
-  background: #007bff; 
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  color: white;
-  text-align: center;
-  padding: 0;
-  margin: 0;
-}
+  /* Small description */
+  .right .desc, .left-register .desc {
+    opacity: 0.9;
+    max-width: 75%;
+  }
+@media (min-width: 768px) {
+    
+  /* Two-column layout */
+  .wrapper {
+    display: flex;
+  }
 
-.left-register img {
-  width: 150px;
-  height: 150px;
-  object-fit: cover;
-  border-radius: 50%;
-  margin-bottom: 1rem;
-}
+  /* LEFT SIDE */
+  .left {
+    width: 50%;
+  }
 
-.left-register .title {
-  font-size: 1.6rem;
-  font-weight: bold;
-  margin-bottom: 0.3rem;
-}
+  /* RIGHT SIDE */
+  .right {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    
+    margin: 0;   /* remove any margin */
+    padding: 0;  /* remove padding */
+    border-radius: 0px;
+  }
 
-.left-register .desc {
-  font-size: 1rem;
-  opacity: 0.9;
-  max-width: 75%;
-}
+  /* Center image */
+  .right img {
+    width: 130px;
+    height: 130px;
+    margin-bottom: 1rem;
+  }
 
-/* RIGHT SIDE */
-.right-register {
-  width: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: #fafafa;
-  padding: 2rem;
+  /* title */
+  .right .title {
+    font-size: 1.6rem;
+    margin-bottom: 0.3rem;
+  }
+
+  /* Small description */
+  .right .desc {
+    font-size: 1rem;
+    opacity: 0.9;
+    max-width: 75%;
+  }
+
+  /* Wrapper for register */
+  .wrapper-register {
+    display: flex;
+    width: 100%;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* LEFT SIDE */
+  .left-register {
+    width: 50%;
+    background: #007bff; 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-align: center;
+    padding: 0;
+    margin: 0;
+  }
+
+  .left-register img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-bottom: 1rem;
+  }
+
+  .left-register .title {
+    font-size: 1.6rem;
+    font-weight: bold;
+    margin-bottom: 0.3rem;
+  }
+
+  .left-register .desc {
+    font-size: 1rem;
+    opacity: 0.9;
+    max-width: 75%;
+  }
+
+  /* RIGHT SIDE */
+  .right-register {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #fafafa;
+    padding: 2rem;
+  }
 }

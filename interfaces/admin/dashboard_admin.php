@@ -515,12 +515,6 @@ $sql .= " ORDER BY items.id DESC";
                         </div>
                     </div>
                 </div>
-
-                <!-- Buttons -->
-                <div class="d-flex gap-2 mt-2">
-                    <button class="btn btn-primary w-50" type="submit">Update Item</button>
-                    <a class="btn btn-secondary w-50" href="dashboard_admin.php">Cancel</a>
-                </div>
             </div>
 
             <div class="form-right">
@@ -551,7 +545,12 @@ $sql .= " ORDER BY items.id DESC";
                     </div>
                 </div>
             </div>
-
+            
+            <!-- Buttons -->
+                <div class="d-flex gap-2 mt-2">
+                    <button class="btn btn-primary w-100" type="submit">Update Item</button>
+                    <a class="btn btn-secondary w-100" href="dashboard_admin.php">Cancel</a>
+                </div>
 
             
             
@@ -679,7 +678,11 @@ $sql .= " ORDER BY items.id DESC";
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">
-                                            
+                                            <?php if(!empty($it['image_path'])): ?>
+                                                <img src="../../<?php echo htmlspecialchars($it['image_path']); ?>" class="card-img-top" alt="Item image">
+                                            <?php else: ?>
+                                                <img src="/assets/image.png" class="card-img-top" alt="Default image">
+                                            <?php endif; ?>
                                             <div class="d-flex gap-2 mb-2">
                                                 <span class="badge rounded-pill bg-<?php echo $it['item_status']; ?>">
                                                     <?php echo ucfirst($it["item_status"]); ?>

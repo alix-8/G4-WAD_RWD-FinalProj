@@ -53,9 +53,25 @@
     object-fit: cover;
 }
 
+.modal-body img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    margin-bottom: 2vh;
+}
+
 .view{
     width: 15px !important;
     margin: 0 2px 4px 4px !important;
+}
+
+.badges{
+    display:flex !important;
+    flex-direction: row !important;
+}
+
+.badge{
+    width: fit-content !important;
 }
 
 /* para to sa mga badge ng status */
