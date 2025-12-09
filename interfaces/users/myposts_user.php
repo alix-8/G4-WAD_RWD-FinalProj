@@ -251,7 +251,7 @@ $sql .= " ORDER BY items.id DESC";
                     <a href="dashboard_user.php">Dashboard</a>
 
                     <!-- 2. MY POSTS -->
-                    <a href="myposts_user.php" style="color: #2289e6; font-weight: 700;">My Feed</a>
+                    <a href="myposts_user.php" style="color: #2289e6; font-weight: 700;">My Posts</a>
 
                     <!-- 3. ABOUT -->
                     <a href="about_us.php">About</a>
@@ -264,7 +264,7 @@ $sql .= " ORDER BY items.id DESC";
             
             <?php $notifCount = $db->querySingle("SELECT COUNT(*) FROM notifications WHERE status = 'unread';");?>
             <div class = "ms-auto">
-                <a href="myposts_admin.php" class="text-white mx-4">
+                <a href="myposts_user.php" class="text-white mx-4">
                     🔔 (<?= $notifCount ?>)
                 </a>
                 <a class="navbar-brand text-white" href="#">Hello, <?php echo htmlspecialchars($user["username"]); ?></a>
@@ -278,7 +278,7 @@ $sql .= " ORDER BY items.id DESC";
         
         <!-- hero section -->
         <section class = "heroSection pt-3">
-            <h1><strong>My Feed</strong></h1>
+            <h1><strong>My Posts</strong></h1>
             <p class = "subtext">Review your posts and check your notification</p>
             <a id = "postItems" type="button" class="btn btn-primary" href="?action=create">
                 Post Item +

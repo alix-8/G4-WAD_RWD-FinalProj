@@ -280,7 +280,7 @@ $sql .= " ORDER BY items.id DESC";
 
             <?php $notifCount = $db->querySingle("SELECT COUNT(*) FROM notifications WHERE status = 'unread';");?>
             <div class = "ms-auto">
-                <a href="myposts_admin.php" class="text-white mx-4">
+                <a href="myposts_user.php" class="text-white mx-4">
                     🔔 (<?= $notifCount ?>)
                 </a>
                 <a class="navbar-brand text-white" href="#">Hello, <?php echo htmlspecialchars($user["username"]); ?></a>

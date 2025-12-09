@@ -280,7 +280,7 @@ $sql .= " ORDER BY items.id DESC";
         
         <!-- hero section -->
         <section class = "heroSection pt-3">
-            <h1><strong>My Feed</strong></h1>
+            <h1><strong>My Posts</strong></h1>
             <p class = "subtext">Review your posts and check your notification</p>
             <a id = "postItems" type="button" class="btn btn-primary" href="?action=create">
                 Post Item +
