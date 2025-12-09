@@ -95,7 +95,7 @@ $sql .= " ORDER BY items.id DESC";
             <div class="offcanvas-body">
                 <a href="dashboard_user.php" id="active_button">Home</a>
                 <a href="dashboard_user.php" id="active_button">Dashboard</a>
-                <a href="#">About</a>
+                <a href="about.php">About</a>
                 <a class="logout" href="../../logout.php" onclick = "return confirm('Are you sure you want to LOG OUT?');">Log out</a>
             </div>
         </div>
