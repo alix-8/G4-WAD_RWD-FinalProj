@@ -109,7 +109,32 @@ function add_categories(): void
 
     echo "Categories inserted\n";
 }
+
+function create_notifications_table(): void
+{
+    $db = get_db();
+
+    $stmt = $db->prepare("
+        CREATE TABLE IF NOT EXISTS notifications (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            item_id INTEGER,
+            user_id INTEGER,      -- sino nag triggered the notification
+            notify_to INTEGER,    -- who should receive
+            message TEXT,
+            type TEXT,            -- 'to_admin' | 'to_user'
+            status TEXT DEFAULT 'unread', -- unread | read | resolved
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        );
+    ");
+
+    $stmt->execute();
+
+    echo "Notifications table created successfully\n";
+}
+
+
 get_db();
-// add_categories()
+// create_notifications_table();
+// add_categories();
 // add_admin();
 ?>
