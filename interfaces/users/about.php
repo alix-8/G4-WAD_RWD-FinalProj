@@ -29,7 +29,7 @@
             </div>
         </div>
         <strong><a class="navbar-brand me-auto" href="#">Campus<span class = "find">Find</a></strong>
-        <a class="navbar-brand ms-auto text-white" href="#">Hello, <?php echo htmlspecialchars($users["username"]); ?></a>
+        <a class="navbar-brand ms-auto text-white" href="#">Hello, <?php echo htmlspecialchars($admin["username"]); ?></a>
     </div>
 </nav>
 
