@@ -28,7 +28,7 @@
                 <a class="logout" href="#">Log out</a>
             </div>
         </div>
-        <strong><a class="navbar-brand me-auto" href="#">Campus<span class = "find">Find</a></strong>
+        <strong><a class="navbar-brand me-auto" href="#">Campus<span class = "find" style="color: white;">Find</a></strong>
         <a class="navbar-brand ms-auto text-white" href="#">Hello, <?php echo htmlspecialchars($admin["username"]); ?></a>
     </div>
 </nav>
