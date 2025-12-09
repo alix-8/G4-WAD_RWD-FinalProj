@@ -47,7 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <div class="wrapper">
 
-        <!-- LEFT SIDE (your current login box) -->
+        <!-- LEFT SIDE -->
         <div class="left">
             <div class="container">
                 <h2>Login to Campus Find</h2>
@@ -65,7 +65,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <!-- RIGHT SIDE -->
         <div class="right">
             <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaXsBOBXzBjPE-gEZm7mH4U05TlK8mqI3VQ8RruSFQpg&s" 
-                    alt="Right Side Image">
+                    alt="Magnifying Glass">
             <p></p>
             <h3>Find What You've Lost</h3>
             <p></p>
