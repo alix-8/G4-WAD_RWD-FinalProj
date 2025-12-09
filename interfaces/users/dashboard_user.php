@@ -230,7 +230,7 @@ $sql .= " ORDER BY items.id DESC";
     <a href="myposts_user.php">My Posts</a>
 
     <!-- 3. ABOUT -->
-    <a href="about.php">About</a>
+    <a href="about_us.php">About</a>
 
     <!-- 4. LOG OUT -->
     <a class="logout" href="../../logout.php" onclick="return confirm('Are you sure you want to LOG OUT?');">Log out</a>
