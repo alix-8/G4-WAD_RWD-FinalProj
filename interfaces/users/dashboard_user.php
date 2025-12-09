@@ -100,9 +100,9 @@ $notif = $db->prepare("
 
 $notif->bindValue(1, $lastItemId, SQLITE3_INTEGER);
 $notif->bindValue(2, $user_id, SQLITE3_INTEGER);
-$notif->bindValue(3, 1, SQLITE3_INTEGER); // 1 = admin ID (adjust if needed)
+$notif->bindValue(3, 1, SQLITE3_INTEGER); // 1 = user ID (adjust if needed)
 $notif->bindValue(4, "User posted a lost item requiring review", SQLITE3_TEXT);
-$notif->bindValue(5, "to_admin", SQLITE3_TEXT);
+$notif->bindValue(5, "to_user", SQLITE3_TEXT);
 $notif->execute();
 
 }
@@ -252,30 +252,41 @@ $sql .= " ORDER BY items.id DESC";
     <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body class="m-0 border-0 bd-example">
-<nav class="navbar p-3 sticky-top">
-    <div class="container-fluid">
-        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
-                data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions"
-                aria-expanded="false" aria-label="Toggle navigation">
-            <img src="/assets/hamburger.png" alt="hamburger icon" width="20px" height="20px">
-        </button>
-        <div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1"
-             id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
-            <div class="offcanvas-body">
-    <!-- 1. DASHBOARD (Active) -->
-    <!-- Added bold/color style here because we are ON the dashboard -->
-    <a href="dashboard_user.php" style="color: #2289e6; font-weight: 700;">Dashboard</a>
+    <nav class="navbar p-3 sticky-top">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
+                    data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <img src="/assets/hamburger.png" alt="hamburger icon" width="20px" height="20px">
+            </button>
+            <div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1"
+                id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
+                <div class="offcanvas-body">
+                    <!-- 1. DASHBOARD (Active) -->
+                    <!-- Added bold/color style here because we are ON the dashboard -->
+                    <a href="dashboard_user.php" style="color: #2289e6; font-weight: 700;">Dashboard</a>
 
-    <!-- 2. MY POSTS -->
-    <a href="myposts_user.php">My Posts</a>
+                    <!-- 2. MY POSTS -->
+                    <a href="myposts_user.php">My Posts</a>
 
-    <!-- 3. ABOUT -->
-    <a href="about_us.php">About</a>
+                    <!-- 3. ABOUT -->
+                    <a href="about_us.php">About</a>
 
-    <!-- 4. LOG OUT -->
-    <a class="logout" href="../../logout.php" onclick="return confirm('Are you sure you want to LOG OUT?');">Log out</a>
-</div>
-</nav>
+                    <!-- 4. LOG OUT -->
+                    <a class="logout" href="../../logout.php" onclick="return confirm('Are you sure you want to LOG OUT?');">Log out</a>
+                </div>
+                
+            </div>
+
+            <?php $notifCount = $db->querySingle("SELECT COUNT(*) FROM notifications WHERE status = 'unread';");?>
+            <div class = "ms-auto">
+                <a href="myposts_admin.php" class="text-white mx-4">
+                    🔔 (<?= $notifCount ?>)
+                </a>
+                <a class="navbar-brand text-white" href="#">Hello, <?php echo htmlspecialchars($user["username"]); ?></a>
+            </div>
+        </div>
+    </nav>
 
 <div class="container my-3">
     <!-- alert messages -->
@@ -588,6 +599,8 @@ $sql .= " ORDER BY items.id DESC";
             <?php if (empty($items)): ?>
                 <p>No items found.</p>
             <?php else: ?>
+                <?php $itemCount = count($items);?>
+                <p>Showing <strong><?php echo $itemCount; ?></strong>  items.</p>
                 <?php foreach ($items as $it): ?>
                     <div class="col-md-4">
                         <!-- cardddd -->
@@ -672,7 +685,7 @@ $sql .= " ORDER BY items.id DESC";
                                         </p>
                                     </div>
                                     <div class="modal-footer">
-                                        <?php if ($_SESSION["user"]["role"] === "admin" || $_SESSION["user"]["id"] == $it["user_id"]): ?>
+                                        <?php if ($_SESSION["user"]["role"] === "user" || $_SESSION["user"]["id"] == $it["user_id"]): ?>
                                             <a href="?action=edit&id=<?= (int)$it["id"]; ?>" class="btn btn-warning">Edit</a>
                                             <a href="?action=delete&id=<?= (int)$it["id"]; ?>" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this item?');">Delete</a>
                                         <?php else: ?>
