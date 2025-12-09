@@ -307,6 +307,8 @@ thead {
   display: flex;
   width: 100%;
   min-height: 100vh;
+  margin: 0;
+  padding: 0;
 }
 
 /* LEFT SIDE */
@@ -316,26 +318,29 @@ thead {
   justify-content: center;
   align-items: center;
   background: #fafafa;
+  margin: 0;
+  padding: 0;
 }
 
 /* RIGHT SIDE */
 .right {
   width: 50%;
-  position: relative;
-  background: #007bff; /* SAME COLOR AS BUTTON */
+  background: #007bff; /* Blue button color */
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  
   color: white;
   text-align: center;
-  padding: 2rem;
+  margin: 0;   /* remove any margin */
+  padding: 0;  /* remove padding */
 }
 
 /* Center image */
 .right img {
-  width: 150px;
-  height: 150px;
+  width: 130px;
+  height: 130px;
   object-fit: cover;
   border-radius: 50%;
   margin-bottom: 1rem;
@@ -343,16 +348,17 @@ thead {
 
 /* Quote / title */
 .right .title {
-  font-size: 1.4rem;
+  font-size: 1.5rem;
   font-weight: bold;
   margin-bottom: 0.5rem;
 }
 
-/* Smaller description */
+/* Small description */
 .right .desc {
-  font-size: 0.9rem;
+  font-size: 1rem;
   opacity: 0.9;
   max-width: 80%;
+  margin-bottom: 1rem;
 }
 
 /* Mobile responsive */
@@ -362,6 +368,5 @@ thead {
   }
   .left, .right {
     width: 100%;
-    height: auto;
   }
 }
