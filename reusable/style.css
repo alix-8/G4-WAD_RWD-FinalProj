@@ -302,50 +302,66 @@ thead {
   margin: 0 0 8px 0;
 }
 
-/* Main wrapper for left + right */
+/* Two-column layout */
 .wrapper {
-    display: flex;
-    height: 100vh;
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
 }
 
 /* LEFT SIDE */
 .left {
-    width: 55%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #fafafa;
 }
 
 /* RIGHT SIDE */
 .right {
-    width: 45%;
-    background-color: #007bff; /* same blue as your button */
-    color: white;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    padding: 40px;
+  width: 50%;
+  position: relative;
+  background: #007bff; /* SAME COLOR AS BUTTON */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  color: white;
+  text-align: center;
+  padding: 2rem;
 }
 
-/* Image styling */
+/* Center image */
 .right img {
-    width: 150px;
-    height: 150px;
-    object-fit: cover;
-    border-radius: 50%;
-    margin-bottom: 20px;
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-bottom: 1rem;
 }
 
-/* Quote */
-.right h3 {
-    font-size: 22px;
-    margin-bottom: 10px;
+/* Quote / title */
+.right .title {
+  font-size: 1.4rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
 }
 
-/* Description text */
-.right .subtext {
-    font-size: 14px;
-    opacity: 0.9;
+/* Smaller description */
+.right .desc {
+  font-size: 0.9rem;
+  opacity: 0.9;
+  max-width: 80%;
+}
+
+/* Mobile responsive */
+@media (max-width: 850px) {
+  .wrapper {
+    flex-direction: column;
+  }
+  .left, .right {
+    width: 100%;
+    height: auto;
+  }
 }
