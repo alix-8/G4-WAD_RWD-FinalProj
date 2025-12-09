@@ -65,12 +65,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <!-- RIGHT SIDE -->
         <div class="right">
             <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e" alt="Image">
-            <h3>“Your Campus, Your Finder.”</h3>
-            <p class="subtext">Locate anything on campus with speed and simplicity.</p>
+            <h3>Find What You've Lost</h3>
+            <p class="subtext">Join thousands of students and staff who have successfully reunited with their lost belongings through CampusFind.</p>
         </div>
 
     </div>
-    
+
 </body>
 
 
