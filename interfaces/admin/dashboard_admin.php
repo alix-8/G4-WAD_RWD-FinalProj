@@ -33,7 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && $action === "store") {
     $location_found = trim($_POST["location_found"] ?? "");
     $date_lost_or_found = trim($_POST["date_lost_or_found"] ?? "");
     $current_location = trim($_POST["current_location"] ?? "");
-    $user_id = $admin['id'];
+    $user_id = $_SESSION["user"]["id"];
     
     // --- IMAGE UPLOAD LOGIC START DITO ---
     $image_path_db = null; // Default to null if no image uploaded
@@ -188,9 +188,11 @@ if (!empty($_GET['item_status'])) {
     $where[] = "items.item_status = '$status'";
 }
 
-$sql = "SELECT items.*, categories.name AS category_name 
-        FROM items 
-        LEFT JOIN categories ON items.category_id = categories.id";
+$sql = "SELECT items.*, categories.name AS category_name, users.username AS posted_by
+        FROM items
+        LEFT JOIN categories ON items.category_id = categories.id
+        LEFT JOIN users ON users.id = items.user_id";
+
 
 if (!empty($where)) {
     $sql .= " WHERE " . implode(" AND ", $where);
@@ -584,6 +586,10 @@ $sql .= " ORDER BY items.id DESC";
 
                             <div class="card-body">
                                 <h5 class="card-title"><strong><?php echo htmlspecialchars($it["title"]); ?></strong></h5>
+                                <p class="posted-by">
+                                    Posted by: <strong><?= htmlspecialchars($it["posted_by"]); ?></strong>
+                                </p>
+
 
                                 <!-- badgess -->
                                 <div class="d-flex gap-2 mb-2">
