@@ -164,40 +164,40 @@ if ($action === "claim") {
 }
 
 // ==========================================
-// LOGIC: Match foundd, magse-send ng notif to user
+// LOGIC: Match found (Admin sends to user)
 // ==========================================
 if ($action === 'match_found' && isset($_GET['id'])) {
     $item_id = (int)$_GET['id'];
 
-    $stmt = $db->prepare("
-        UPDATE items 
-        SET item_status = 'matched' 
-        WHERE id = ?
-    ");
+    // Update item to matched
+    $stmt = $db->prepare("UPDATE items SET item_status = 'matched' WHERE id = ?");
     $stmt->bindValue(1, $item_id, SQLITE3_INTEGER);
     $stmt->execute();
 
-    // Notify the user
-    $userStmt = $db->querySingle("
-        SELECT user_id FROM items WHERE id = $item_id
-    ");
+    // Get user who posted this item
+    $item = $db->querySingle("SELECT user_id, title FROM items WHERE id = $item_id", true);
 
-    if ($userStmt) {
+    if ($item && !empty($item['user_id'])) {
+
+        $user_to_notify = $item['user_id'];
+        $title = $item['title'];
+
+        // Insert notification to user
         $notif = $db->prepare("
-            INSERT INTO notifications (item_id, user_id, notify_to, message, type)
-            VALUES (?, ?, ?, ?, ?)
+            INSERT INTO notifications (item_id, user_id, notify_to, message, type, status)
+            VALUES (?, ?, ?, ?, 'to_user', 'unread')
         ");
         $notif->bindValue(1, $item_id, SQLITE3_INTEGER);
-        $notif->bindValue(2, $_SESSION['user']['id'], SQLITE3_INTEGER); // admin
-        $notif->bindValue(3, $userStmt, SQLITE3_INTEGER); // notify user
-        $notif->bindValue(4, "Admin found a match for your lost item!", SQLITE3_TEXT);
-        $notif->bindValue(5, "to_user", SQLITE3_TEXT);
+        $notif->bindValue(2, $_SESSION['user']['id'], SQLITE3_INTEGER); // admin who triggered
+        $notif->bindValue(3, $user_to_notify, SQLITE3_INTEGER); // Send to the user
+        $notif->bindValue(4, "An admin found a match for your item: $title", SQLITE3_TEXT);
         $notif->execute();
     }
 
-    header("Location: dashboard_admin.php?msg=Match+success");
+    header("Location: dashboard_admin.php?msg=Match+sent");
     exit;
 }
+
 
 
 // ==========================================

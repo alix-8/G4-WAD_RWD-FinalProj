@@ -146,33 +146,16 @@ if ($action === "delete") {
     }
 }
 
+
 // ==========================================
-// LOGIC: CLAIM ITEMMMM
+// LOGIC: FETCH NOTIFSS GALING KAY ADMIN
 // ==========================================
-if ($action === "claim") {
-    $id = (int)($_GET['id'] ?? 0);
-
-    if ($id > 0) {
-        $stmt = $db->prepare("UPDATE items SET item_status = 'claimed' WHERE id = ?");
-        $stmt->bindValue(1, $id, SQLITE3_INTEGER);
-        $stmt->execute();
-
-        header("Location: dashboard_user.php?msg=Item+Status+Updated+To+Claimed");
-        exit;
-    } else {
-        $error = "Invalid item ID for claiming.";
-    }
-}
-
-// fetch notifss
-$userId = $_SESSION["user"]["id"];
-
+$user_id = $_SESSION['user']['id'];
 $notifQuery = $db->query("
     SELECT notifications.*, items.title AS item_title
     FROM notifications
     LEFT JOIN items ON items.id = notifications.item_id
-    WHERE notifications.notify_to = $userId
-    AND notifications.type = 'to_user'
+    WHERE notifications.notify_to = $user_id AND notifications.type = 'to_user'
     ORDER BY notifications.created_at DESC
 ");
 
@@ -180,6 +163,8 @@ $userNotifications = [];
 while ($n = $notifQuery->fetchArray(SQLITE3_ASSOC)) {
     $userNotifications[] = $n;
 }
+
+
 
 
 // ==========================================
@@ -271,7 +256,251 @@ $sql .= " ORDER BY items.id DESC";
             </div>
         </div>
     </nav>
+
 <div class="container my-3">
+    <!-- alert messages -->
+    <?php if ($msg): ?>
+        <div class="alert alert-success"><?php echo htmlspecialchars($msg); ?>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>
+    <?php endif; ?>
+
+    <?php if ($error): ?>
+        <div class="alert alert-danger"><?php echo htmlspecialchars($error); ?>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>
+    <?php endif; ?>
+
+    <!-- ========================================== -->
+    <!-- CREATE FORM -->
+    <!-- ========================================== -->
+    <?php if ($action === "create"): ?>
+        <h3 class="mb-4" style="font-weight: 700; color: #334155;">Post New Item</h3>
+        
+        <form method="post" action="?action=store" enctype="multipart/form-data">
+            <div class="form-grid-layout">
+                
+                <!-- LEFT COLUMN -->
+                <div class="form-left">
+                    <!-- Title -->
+                    <div class="input-group-modern">
+                        <label>Item Name</label>
+                        <input type="text" name="title" placeholder="e.g. Blue Jansport Backpack" required>
+                    </div>
+
+                    <!-- Row: Status & Category -->
+                    <div class="form-row">
+                        <div class="input-group-modern">
+                        </div>
+                        <div class="input-group-modern">
+                            <label>Category</label>
+                            <select name="category_id" id="category_id" required>
+                                <option value="">Select Category</option>
+                                <?php
+                                $catQ = $db->query("SELECT * FROM categories ORDER BY name");
+                                while($c = $catQ->fetchArray(SQLITE3_ASSOC)):
+                                ?>
+                                    <option value="<?= $c['id']; ?>">
+                                        <?= ucfirst(str_replace('_', ' ', $c['name'])); ?>
+                                    </option>
+                                <?php endwhile; ?>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="input-group-modern">
+                        <label>Description</label>
+                        <textarea name="description" rows="3" placeholder="Describe the item (color, distinctive marks, brand)..."></textarea>
+                    </div>
+
+                    <!-- Locations (nadi-disable ang isang field kapag di sya applicable) -->
+                    <div class="form-row">
+                        <div class="input-group-modern">
+                            <label>Lost Location</label>
+                            <input type="text" name="location_lost" id="location_lost" placeholder="Where was it lost?">
+                        </div>
+                    </div>
+
+                    <!-- Date -->
+                    <div class="form-row">
+                        <div class="input-group-modern">
+                            <label id="dateLabel">Date Event</label>
+                            <div class="date-card">
+                                <input type="date" name="date_lost_or_found" id="date_lost_or_found" style="border:none; background:transparent; padding:0;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- buttonsss -->
+                    <div class="d-flex gap-2 mt-2">
+                        <button class="btn btn-primary w-50" type="submit">Publish Post</button>
+                        <a class="btn btn-secondary w-50" href="myposts_user.php" style="background-color: #cbd5e1; color: #334155; border:none;">Cancel</a>
+                    </div>
+                </div>
+
+                <!-- RIGHT COLUMN: IMAGE UPLOAD -->
+                <div class="form-right">
+                    <div class="input-group-modern" style="height: 100%;">
+                        <label>Item Image</label>
+                        
+                        <div class="image-upload-wrapper">
+                            <input type="file" name="item_image" id="file-input-real" accept="image/*" onchange="previewImage(event)">
+                            
+                            <!-- The Preview Image -->
+                            <img id="image-preview" src="#" alt="Image Preview">
+
+                            <!-- The Placeholder UI -->
+                            <div class="upload-placeholder" id="upload-placeholder">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg>
+                                <p><strong>Click to Upload</strong><br>or drag and drop here</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </form>
+
+        <!-- Inline JS for Image Preview -->
+        <script>
+            function previewImage(event) {
+                const input = event.target;
+                const preview = document.getElementById('image-preview');
+                const placeholder = document.getElementById('upload-placeholder');
+                
+                if (input.files && input.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        preview.src = e.target.result;
+                        preview.style.display = 'block';
+                        placeholder.style.display = 'none';
+                    }
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+
+        </script>
+
+    <!-- ========================================== -->
+    <!-- EDIT FORM -->
+    <!-- ========================================== -->
+    <?php elseif ($action === "edit"): 
+    $id = (int)($_GET["id"] ?? 0);
+    $stmt = $db->prepare("SELECT * FROM items WHERE id = ?");
+    $stmt->bindValue(1, $id, SQLITE3_INTEGER);
+    $res = $stmt->execute();
+    $item = $res->fetchArray(SQLITE3_ASSOC);
+
+    if ($item): ?>
+    
+        <h3 class="mb-4">Edit Item</h3>
+        <form method="post" action="?action=edit" enctype="multipart/form-data">
+            <div class="form-grid-layout">
+                <div class="form-left">
+                    <input type="hidden" name="id" value="<?php echo (int)$item['id']; ?>">
+
+                <!-- Title -->
+                <div class="input-group-modern">
+                    <label>Item Name</label>
+                    <input type="text" name="title" placeholder="e.g. Blue Jansport Backpack" 
+                        value="<?php echo htmlspecialchars($item['title']); ?>" required>
+                </div>
+
+                <!-- Status & Category Row -->
+                <div class="form-row">
+                    <div class="input-group-modern">
+                        <label>Status</label>
+
+                    </div>
+                    <div class="input-group-modern">
+                        <label>Category</label>
+                        <select name="category_id" id="category_id" required>
+                            <option value="">Select Category</option>
+                            <?php
+                            $catQ = $db->query("SELECT * FROM categories ORDER BY name");
+                            while($c = $catQ->fetchArray(SQLITE3_ASSOC)):
+                            ?>
+                                <option value="<?= $c['id']; ?>" 
+                                    <?= ($item['category_id'] == $c['id']) ? 'selected' : '' ?>>
+                                    <?= ucfirst(str_replace('_', ' ', $c['name'])); ?>
+                                </option>
+                            <?php endwhile; ?>
+                        </select>
+                    </div>
+                </div>
+            
+                
+                <!-- Description -->
+                <div class="input-group-modern">
+                    <label>Description</label>
+                    <textarea name="description" rows="3" 
+                            placeholder="Describe the item (color, distinctive marks, brand)..."><?php 
+                        echo htmlspecialchars($item['description']); ?></textarea>
+                </div>
+
+                <!-- Locations Row -->
+                <div class="form-row">
+                    <div class="input-group-modern">
+                        <label>Lost Location</label>
+                        <input type="text" name="location_lost" id="location_lost" 
+                            placeholder="Where was it lost?"
+                            value="<?php echo htmlspecialchars($item['location_lost']); ?>">
+                    </div>
+                </div>
+
+                <!-- Date -->
+                <div class="form-row">
+                    <div class="input-group-modern">
+                        <label id="dateLabel">Date Event</label>
+                        <div class="date-card">
+                            <input type="date" name="date_lost_or_found" id="date_lost_or_found"
+                                value="<?php echo htmlspecialchars($item['date_lost_or_found']); ?>"
+                                style="border:none; background:transparent; padding:0;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Buttons -->
+                <div class="d-flex gap-2 mt-2">
+                    <button class="btn btn-primary w-50" type="submit">Update Item</button>
+                    <a class="btn btn-secondary w-50" href="myposts_user.php">Cancel</a>
+                </div>
+            </div>
+
+            <div class="form-right">
+                <div class="input-group-modern" style="height: 100%;">
+                    <label>Item Image</label>
+
+                    <div class="image-upload-wrapper">
+
+                        <input type="file" name="item_image" id="file-input-real" accept="image/*" onchange="previewImage(event)">
+
+                        <?php if (!empty($item['image_path'])): ?>
+                            <img id="image-preview" 
+                                src="../../<?= htmlspecialchars($item['image_path']); ?>" 
+                                style="display:block; max-width:100%; border-radius:10px;">
+
+                        <?php else: ?>
+                            <img id="image-preview" src="#" style="display:none; max-width:100%; border-radius:10px;">
+                        <?php endif; ?>
+
+                        <div class="upload-placeholder" id="upload-placeholder"
+                            style="<?php if (!empty($item['image_path'])) echo 'display:none;'; ?>">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/>
+                            </svg>
+                            <p><strong>Click to Upload</strong><br>or drag and drop here</p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>    
+        </form>
+    <?php else: ?>
+        <p>Item not found.</p>
+        <a class="btn btn-secondary" href="dashboard_user.php">Back</a>
+    <?php endif; ?>
+
+    <?php else: ?>
     <!-- ========================================== -->
     <!-- DASHBOARD LIST VIEW DITO -->
     <!-- ========================================== -->
@@ -332,44 +561,19 @@ $sql .= " ORDER BY items.id DESC";
             <?php else: ?>
                 <?php foreach ($userNotifications as $note): ?>
                     <div class="col-md-6">
-                        <div class="card p-3 my-2" style="cursor:pointer;" data-bs-toggle="modal" data-bs-target="#notifModal-<?= $note['id']; ?>">
-                            <strong><?= htmlspecialchars($note['item_title']); ?></strong>
-                            <p class="mb-1"><?= htmlspecialchars($note['message']); ?></p>
-                            <small class="text-secondary"><?= $note["created_at"]; ?></small>
-                        </div>
+                        <a href="myposts_user.php#item-<?= $note['item_id']; ?>"
+                        class="text-decoration-none text-dark">
+                            <div class="card p-3 my-2">
+                                <strong><?= htmlspecialchars($note['item_title']); ?></strong>
+                                <p class="mb-1"><?= htmlspecialchars($note['message']); ?></p>
+                                <small class="text-secondary"><?= $note['created_at']; ?></small>
+                            </div>
+                        </a>
                     </div>
                 <?php endforeach; ?>
             <?php endif; ?>
         </div>
 
-        <?php foreach ($userNotifications as $note): ?>
-        <div class="modal fade" id="notifModal-<?= $note['id']; ?>" tabindex="-1">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    
-                    <div class="modal-header">
-                        <h5 class="modal-title">
-                            Notification – <?= htmlspecialchars($note['item_title']); ?>
-                        </h5>
-                        <button class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-
-                    <div class="modal-body">
-                        <p><?= nl2br(htmlspecialchars($note['message'])); ?></p>
-                        <small class="text-muted">Received: <?= $note['created_at']; ?></small>
-                    </div>
-
-                    <div class="modal-footer">
-                        <form method="POST">
-                            <input type="hidden" name="mark_read" value="<?= $note['id']; ?>">
-                            <button class="btn btn-success">Okay</button>
-                        </form>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-        <?php endforeach; ?>
 
             
 
@@ -389,7 +593,7 @@ $sql .= " ORDER BY items.id DESC";
                 <?php $itemCount = count($items);?>
                 <p>Showing <strong><?php echo $itemCount; ?></strong>  items.</p>
                 <?php foreach ($items as $it): ?>
-                    <div class="col-md-4">
+                    <div class="col-md-4" id="item-<?= $it['id']; ?>">
                         <!-- cardddd -->
                         <div class="card my-2">
                             <!-- IMAGE DISPLAY LOGIC -->
@@ -474,16 +678,13 @@ $sql .= " ORDER BY items.id DESC";
                                             </p>
                                         </div>
                                         <div class="modal-footer">
-                                            <?php if ($it['item_status'] !== 'claimed'): ?>
-                                                <a href="?action=claim&id=<?php echo (int)$it["id"]; ?>" onclick="return confirm('Are you sure you want to mark this item CLAIMED?');" class="btn btn-success">Claim</a>
+                                            <?php if ($_SESSION["user"]["role"] === "user" && $_SESSION["user"]["id"] == $it["user_id"]  && $it["item_status"] == "matched"): ?>
+                                                <p>Go to the Lost and Found Office to check if the item matched is yours and claim.</p>
+                                                <a href="about_us.php#lf_office">Want to know if the office is open?</a>
                                             <?php else: ?>
-                                                <button class="btn btn-secondary" disabled>Claimed</button>
+                                            <a href="?action=edit&id=<?= (int)$it["id"]; ?>" class="btn btn-warning">Edit</a>
+                                            <a href="?action=delete&id=<?= (int)$it["id"]; ?>" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this item?');">Delete</a>
                                             <?php endif; ?>
-
-                                            
-                                            <a href="?action=edit&id=<?php echo (int)$it["id"]; ?>" class="btn btn-warning">Edit</a>
-                                            <a href="?action=delete&id=<?php echo (int)$it["id"]; ?>" class="btn btn-danger"
-                                    onclick="return confirm('Are you sure you want to delete this item?');">Delete</a>
                                         </div>
                                         </div>
                                     </div>
@@ -495,7 +696,7 @@ $sql .= " ORDER BY items.id DESC";
                 <?php endforeach; ?>
             <?php endif; ?>
         </div>
-    
+    <?php endif; ?>
 </div>   
   </body>
 </html>

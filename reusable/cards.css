@@ -62,6 +62,7 @@
 .badge.bg-lost { background: var(--lost-color) !important; }
 .badge.bg-found { background: var(--found-color) !important; }
 .badge.bg-claimed { background: var(--claimed-color) !important; }
+.badge.bg-matched { background: #d9cd4c !important; }
 
 /* ito badge sa category */
 .category {

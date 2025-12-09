@@ -153,7 +153,7 @@ $user = $_SESSION["user"];
                 </div>
 
                 <!-- Question 3 -->
-                <div class="accordion-item">
+                <div class="accordion-item" id = "lf_office">
                     <h2 class="accordion-header">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree">
                             Where is the Lost & Found office located?

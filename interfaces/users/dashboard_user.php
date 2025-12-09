@@ -580,7 +580,6 @@ $sql .= " ORDER BY items.id DESC";
                     <?php endwhile; ?>
                 </select>
 
-
                 <button type="submit" class="btn btn-primary m-2">Filter</button>
             </form>
             
@@ -685,14 +684,15 @@ $sql .= " ORDER BY items.id DESC";
                                         </p>
                                     </div>
                                     <div class="modal-footer">
-                                        <?php if ($_SESSION["user"]["role"] === "user" || $_SESSION["user"]["id"] == $it["user_id"]): ?>
+                                        <?php if ($_SESSION["user"]["role"] === "user" && $_SESSION["user"]["id"] == $it["user_id"] && $it["item_status"] != "matched"): ?>
                                             <a href="?action=edit&id=<?= (int)$it["id"]; ?>" class="btn btn-warning">Edit</a>
                                             <a href="?action=delete&id=<?= (int)$it["id"]; ?>" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this item?');">Delete</a>
+                                        <?php elseif ($_SESSION["user"]["role"] === "user" && $_SESSION["user"]["id"] == $it["user_id"]  && $it["item_status"] == "matched"): ?>
+                                            <p>Go to the Lost and Found Office to check if the item matched is yours and claim.</p>
+                                            <a href="about_us.php#lf_office">Visit FAQs for Lost & Found Office Infos</a>
                                         <?php else: ?>
                                             <p>Is this yours? If you think it is, head to the Lost and Found Office, prove possesion and claim now!</p>
-                                            <a href="">Want to know if the office is open?</a>
                                         <?php endif; ?>
-                                        
                                     </div>
                                     </div>
                                 </div>
