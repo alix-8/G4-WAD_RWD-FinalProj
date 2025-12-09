@@ -66,8 +66,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <div class="right">
             <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e" alt="Image">
             <h3>Find What You've Lost</h3>
-            <p class="subtext" style="color: white;">Join thousands of students and staff who have successfully
-                reunited with their lost belongings through CampusFind.</p>
+            <div></div>
+            <p class="subtext" style="color: white;">Join thousands of students and staff who have successfully reunited with their lost belongings through CampusFind.</p>
         </div>
 
     </div>
