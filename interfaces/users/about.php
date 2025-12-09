@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../../reusable/header.css">
-    <link rel="stylesheet" href="../../reusable/forms.css">
+    <link rel="stylesheet" href="../../reusable/form.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
     <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
@@ -22,17 +22,16 @@
         <div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1"
              id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
             <div class="offcanvas-body">
-                <a href="dashboard_user.php" id="active_button">Dashboard</a>
+                <a href="dashboard_user.php">Dashboard</a>
                 <a href="myposts_user.php">My Posts</a>
-                <a href="#">About</a>
-                <a class="logout" href="#">Log out</a>
+                <a href="about.php">About</a>
+                <a class="logout" href="../../logout.php" onclick="return confirm('Are you sure you want to LOG OUT?');">Log out</a>
             </div>
         </div>
-        <strong><a class="navbar-brand me-auto" href="#">Campus<span class = "find">Find</a></strong>
+        <strong><a class="navbar-brand me-auto" href="#">Campus<span class = "find" style="color: white;">Find</a></strong>
         <a class="navbar-brand ms-auto text-white" href="#">Hello, <?php echo htmlspecialchars($admin["username"]); ?></a>
     </div>
 </nav>
-
 
 </body>
 </html>

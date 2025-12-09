@@ -262,15 +262,19 @@ $sql .= " ORDER BY items.id DESC";
         <div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1"
              id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
             <div class="offcanvas-body">
-                <a href="dashboard_user.php" id="active_button">Home</a>
-                <a href="dashboard_user.php" id="active_button">Dashboard</a>
-                <a href="about.php">About</a>
-                <a class="logout" href="../../logout.php" onclick = "return confirm('Are you sure you want to LOG OUT?');">Log out</a>
-            </div>
-        </div>
-        <strong><a class="navbar-brand me-auto" href="#">Campus<span class = "find">Find</a></strong>
-        <a class="navbar-brand ms-auto text-white" href="#">Hello, <?php echo htmlspecialchars($user["username"]); ?></a>
-    </div>
+    <!-- 1. DASHBOARD (Active) -->
+    <!-- Added bold/color style here because we are ON the dashboard -->
+    <a href="dashboard_user.php" style="color: #2289e6; font-weight: 700;">Dashboard</a>
+
+    <!-- 2. MY POSTS -->
+    <a href="myposts_user.php">My Posts</a>
+
+    <!-- 3. ABOUT -->
+    <a href="about_us.php">About</a>
+
+    <!-- 4. LOG OUT -->
+    <a class="logout" href="../../logout.php" onclick="return confirm('Are you sure you want to LOG OUT?');">Log out</a>
+</div>
 </nav>
 
 <div class="container my-3">
