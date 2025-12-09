@@ -361,12 +361,3 @@ thead {
   margin-bottom: 1rem;
 }
 
-/* Mobile responsive */
-@media (max-width: 850px) {
-  .wrapper {
-    flex-direction: column;
-  }
-  .left, .right {
-    width: 100%;
-  }
-}
