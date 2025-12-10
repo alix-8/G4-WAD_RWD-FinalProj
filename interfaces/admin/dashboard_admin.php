@@ -494,12 +494,19 @@ $sql .= " ORDER BY items.id DESC";
                             placeholder="Where was it lost?"
                             value="<?php echo htmlspecialchars($item['location_lost']); ?>">
                     </div>
-                    <div class="input-group-modern">
-                        <label>Found Location</label>
-                        <input type="text" name="location_found" id="location_found" 
-                            placeholder="Where was it found?"
-                            value="<?php echo htmlspecialchars($item['location_found']); ?>">
-                    </div>
+                    <?php 
+                        $isAdmin = ($_SESSION['user']['role'] === 'admin');
+                    ?>
+
+                    <?php if ($isAdmin && $item['item_status'] === 'found'): ?>
+                        <div class="input-group-modern">
+                            <label>Found Location</label>
+                            <input type="text" name="location_found" id="location_found" 
+                                placeholder="Where was it found?"
+                                value="<?php echo htmlspecialchars($item['location_found']); ?>">
+                        </div>
+                    <?php endif; ?>
+
                 </div>
 
                 <!-- Date -->
