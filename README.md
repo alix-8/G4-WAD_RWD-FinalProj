@@ -23,6 +23,29 @@ All members for the QA (Quality Assurance)
 • test all system features for errors
 • report bugs and ensure the system runs smoothly before submission.
 
+Individual Contributions & Task Breakdown
+​The following tasks were assigned and tracked across the development timeline:
+​Backend & Functional Development
+• ​Bon: 
+• ​Established the GitHub folder structure.
+• ​Developed the Dashboard Page (for both Admin and User views).
+• ​Implemented the Sidebar and "View Details" functionality.
+• ​Mel: 
+• ​Created initial wireframes.
+• ​Developed the "My Posts" Page (specifically for lost item tracking).
+• ​Built the submission forms and implemented the Photo Upload functionality.
+• ​Jay-R: 
+• ​Collaborated on the Database Schema.
+• ​Developed the FAQs Page based on the approved logic.
+• ​Tasked with styling the input forms.
+​Frontend & UI/UX Design
+• ​Stephanne: 
+• ​Responsible for style.css modifications (Index, Registration, Login).
+• ​Developed the About Page (with instructions to extend content to the landing page/index if needed).
+• ​Jess: 
+• ​Collaborated on the Database Schema.
+• ​Sourced and implemented Images and Icons based on wireframes.
+• Documentation of the project
 
 
 Features
