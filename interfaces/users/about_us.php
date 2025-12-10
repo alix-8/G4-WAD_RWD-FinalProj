@@ -39,6 +39,7 @@ while ($n = $notifQuery->fetchArray(SQLITE3_ASSOC)) {
     <!-- CSS FILES -->
     <link rel="stylesheet" href="../../reusable/header.css">
     <link rel="stylesheet" href="../../reusable/about_us.css"> 
+    <link rel="stylesheet" href="../../reusable/footer.css"> 
     
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -212,12 +213,32 @@ while ($n = $notifQuery->fetchArray(SQLITE3_ASSOC)) {
         </div>
         <!-- ============================================= -->
 
-        <!-- FOOTER -->
-        <div class="about-footer">
-            &copy; 2025 CampusFind. WAD 1 & RWD Final Project.
-        </div>
-
+        
     </div>
+    <footer>
+        <!-- FOOTER -->
+        <div class="layer1">
+            <div class="brand">
+                <h4>Campus<span class="find">Find</span></h4>
+                Your Campus Lost & Found Hub. Helping students and staff reunite with their lost items quickly and easily.
+            </div>
+            <div class="qlinks">
+                <strong>Quick Links</strong>
+                <a href="dashboard_user.php">Dashboard</a>
+                <a href="myposts_user.php">My Wall</a>
+            </div>
+            <div class="contacts">
+                <strong>Contact</strong>
+                Lost & Found Office
+                Main Building, Room 101
+                campusfind@university.edu
+            </div>
+        </div>
+        <div class="layer2">
+            &copy 2025 CampusFind. All rights reserved.
+        </div>
+        
+    </footer>
 
 </body>
 </html>
