@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-$user = $_SESSION["user"];
 require_once __DIR__ . "/../../database/db.php";
 $db = get_db();
 
@@ -60,19 +59,20 @@ while ($n = $notifQuery->fetchArray(SQLITE3_ASSOC)) {
                 id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
                 <div class="offcanvas-body">
                     <a href="dashboard_user.php">Dashboard</a>
-                    <a href="myposts_user.php" style="color: #2289e6; font-weight: 700;">My Posts</a>
-                    <a href="about_us.php">About</a>
+                    <a href="myposts_user.php">My Wall</a>
+                    <a href="about_us.php" style="color: #2289e6; font-weight: 700;">About</a>
                     <a class="logout" href="../../logout.php" onclick="return confirm('Are you sure you want to LOG OUT?');">Log out</a>
                 </div>
             </div>
-            <strong><a class="navbar-brand me-auto" href="#">Campus<span class = "find">Find</a></strong>
+            <strong><a class="navbar-brand me-auto" href="dashboard_user.php">Campus<span class="find">Find</span></a></strong>
             
-            <?php $userId = $_SESSION['user']['id']; 
+            <?php 
             $notifCount = $db->querySingle("
                 SELECT COUNT(*) 
                 FROM notifications 
-                WHERE status = 'unread' AND notify_to = $userId AND type = 'to_user'
-            ");?>
+                WHERE status = 'unread' AND notify_to = $user_id AND type = 'to_user'
+            ");
+            ?>
             <div class = "ms-auto">
                 <a href="myposts_user.php" class="notif mx-4">
                     🔔<?= $notifCount ?>
@@ -144,7 +144,9 @@ while ($n = $notifQuery->fetchArray(SQLITE3_ASSOC)) {
             </div>
         </div>
 
-        <!-- FAQ SECTION (ADDED HERE) -->
+        <!-- ============================================= -->
+        <!-- FAQ SECTION (INSERTED HERE) -->
+        <!-- ============================================= -->
         <div class="faq-section">
             <h2>Frequently Asked Questions</h2>
             
@@ -159,7 +161,7 @@ while ($n = $notifQuery->fetchArray(SQLITE3_ASSOC)) {
                     </h2>
                     <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
                         <div class="accordion-body">
-                            Go to the <strong>My Posts</strong> page and click "Report Lost Item". Fill in the details such as description, location lost, and upload a photo if you have one.
+                            Go to the <strong>My Wall</strong> page and click "Report Lost Item". Fill in the details such as description, location lost, and upload a photo if you have one.
                         </div>
                     </div>
                 </div>
@@ -179,7 +181,7 @@ while ($n = $notifQuery->fetchArray(SQLITE3_ASSOC)) {
                 </div>
 
                 <!-- Question 3 -->
-                <div class="accordion-item" id = "lf_office">
+                <div class="accordion-item" id="lf_office">
                     <h2 class="accordion-header">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree">
                             Where is the Lost & Found office located?
@@ -201,13 +203,14 @@ while ($n = $notifQuery->fetchArray(SQLITE3_ASSOC)) {
                     </h2>
                     <div id="collapseFour" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
                         <div class="accordion-body">
-                            Yes! Go to <strong>My Posts</strong>, find the item you posted, and click the "Delete" button. We recommend doing this once your item has been successfully recovered.
+                            Yes! Go to <strong>My Wall</strong>, find the item you posted, and click the "Delete" button. We recommend doing this once your item has been successfully recovered.
                         </div>
                     </div>
                 </div>
 
             </div>
         </div>
+        <!-- ============================================= -->
 
         <!-- FOOTER -->
         <div class="about-footer">
