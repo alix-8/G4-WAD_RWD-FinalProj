@@ -706,22 +706,23 @@ $sql .= " ORDER BY items.id DESC";
                                                 <?php echo htmlspecialchars($it["description"]); ?><br>
                                                 <div class = "details">
                                                     <div class="field">
-                                                        <?php if ($it["item_status"] == "lost"): ?>
-                                                        <strong>Location lost <br></strong>
+                                                        <?php if (!empty($it["location_lost"])): ?>
+                                                        <strong>Location Lost <br></strong>
                                                         <?php echo htmlspecialchars($it["location_lost"]); ?>
-                                                        <?php elseif ($it["item_status"] == "found"): ?>
-                                                            <strong>Location found <br></strong>
-                                                            <?php echo htmlspecialchars($it["location_found"]); ?>
-                                                        <?php endif; ?>
+                                                    <?php elseif (!empty($it["location_found"])): ?>
+                                                        <strong>Location Found <br></strong>
+                                                        <?php echo htmlspecialchars($it["location_found"]); ?>
+                                                    <?php endif; ?>
                                                     </div>
                                                     
                                                     <div class="field">
-                                                        <?php if ($it["item_status"] == "lost"): ?>
-                                                        <strong>Date lost <br></strong>
-                                                        <?php elseif ($it["item_status"] == "found"): ?>
-                                                            <strong>Date found <br></strong>
+                                                        <?php if (!empty($it["location_lost"])): ?>
+                                                            <strong>Date Lost <br></strong>
+                                                        <?php else: ?>
+                                                            <strong>Date Found <br></strong>
                                                         <?php endif; ?>  
-                                                        <?php echo htmlspecialchars($it["date_lost_or_found"]); ?> <br> 
+                                                        
+                                                        <?php echo htmlspecialchars($it["date_lost_or_found"]); ?> <br>  
                                                     </div>
                                                     
                                                 </div>
