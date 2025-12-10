@@ -261,39 +261,36 @@ $sql .= " ORDER BY items.id DESC";
 </head>
 <body class="m-0 border-0 bd-example">
 <nav class="navbar p-3 sticky-top">
-    <div class="container-fluid">
-        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
-                data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions"
-                aria-expanded="false" aria-label="Toggle navigation">
-            <img src="/assets/hamburger.png" alt="hamburger icon" width="20px" height="20px">
-        </button>
-        <div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1"
-             id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
-            <div class="offcanvas-body">
-                <a href="dashboard_admin.php" id="active_button">Dashboard</a>
-                <a href="myposts_admin.php" id="active_button">My Feed</a>
-                <!-- FIXED LOGOUT PATH :D -->
-                <a class="logout" href="../../logout.php" onclick = "return confirm('Are you sure you want to LOG OUT?');">Log out</a>
-            </div>
-        </div>
-        <strong><a class="navbar-brand me-auto" href="#">Campus<span class = "find">Find</a></strong>
-
-        <?php 
-        $adminId = $_SESSION['user']['id']; 
-        $notifCount = $db->querySingle("
-            SELECT COUNT(*) 
-            FROM notifications 
-            WHERE status = 'unread' AND notify_to = $adminId AND type = 'to_admin'
-        ");
-        ?>
-
-        <div class = "ms-auto">
-            <a href="myposts_admin.php" class="notif mx-4">
-                🔔<?= $notifCount ?>
-            </a>
-            <a class="navbar-brand text-white" href="#">Hello, <?php echo htmlspecialchars($admin["username"]); ?></a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
+            data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions"
+            aria-expanded="false" aria-label="Toggle navigation">
+        <img src="/assets/hamburger.png" alt="hamburger icon" width="20px" height="20px">
+    </button>
+    <div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1"
+            id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
+        <div class="offcanvas-body">
+            <a href="dashboard_admin.php" style="color: #2289e6; font-weight: 700;">Dashboard</a>
+            <a href="myposts_admin.php" >My Wall</a>
+            <!-- FIXED LOGOUT PATH :D -->
+            <a class="logout" href="../../logout.php" onclick = "return confirm('Are you sure you want to LOG OUT?');">Log out</a>
         </div>
     </div>
+    <strong><a class="navbar-brand me-auto d-none d-md-inline" href="#">Campus<span class = "find">Find</a></strong>
+
+    <?php 
+    $adminId = $_SESSION['user']['id']; 
+    $notifCount = $db->querySingle("
+        SELECT COUNT(*) 
+        FROM notifications 
+        WHERE status = 'unread' AND notify_to = $adminId AND type = 'to_admin'
+    ");
+    ?>
+
+    <div class = "ms-auto">
+        <a href="myposts_admin.php" class="notif mx-4">
+            🔔<?= $notifCount ?>
+        </a>
+        <a class="navbar-brand text-white" href="#">Hello, <?php echo htmlspecialchars($admin["username"]); ?></a>
 </nav>
 
 <div class="container my-3">

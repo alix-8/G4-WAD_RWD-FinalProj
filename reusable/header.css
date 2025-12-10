@@ -22,6 +22,11 @@
     font-family: "Plus Jakarta Sans", sans-serif;
 }
 
+.navbar .container-fluid { flex-wrap: nowrap !important; }
+.navbar .navbar-brand, .navbar .navbar-text, .navbar .notif { white-space: nowrap !important; }
+
+.navbar .navbar-toggler { flex: 0 0 auto !important; }
+.navbar .ms-auto { margin-left: auto !important; }
 .navbar-brand {
     font-size: 20px !important;
 }

@@ -1,12 +1,33 @@
 <?php
 session_start();
 
+$user = $_SESSION["user"];
+require_once __DIR__ . "/../../database/db.php";
+$db = get_db();
+
 // 1. Security Check
 if (!isset($_SESSION["user"])) {
     header("Location: ../../login.php");
     exit;
 }
 $user = $_SESSION["user"];
+
+// ==========================================
+// LOGIC: FETCH NOTIFSS GALING KAY ADMIN
+// ==========================================
+$user_id = $_SESSION['user']['id'];
+$notifQuery = $db->query("
+    SELECT notifications.*, items.title AS item_title
+    FROM notifications
+    LEFT JOIN items ON items.id = notifications.item_id
+    WHERE notifications.notify_to = $user_id AND notifications.type = 'to_user' AND notifications.status != 'resolved'
+    ORDER BY notifications.created_at DESC
+");
+
+$userNotifications = [];
+while ($n = $notifQuery->fetchArray(SQLITE3_ASSOC)) {
+    $userNotifications[] = $n;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -36,23 +57,28 @@ $user = $_SESSION["user"];
                 <img src="/assets/hamburger.png" alt="hamburger icon" width="20px" height="20px">
             </button>
             <div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1"
-                 id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
+                id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
                 <div class="offcanvas-body">
-                    <!-- 1. DASHBOARD -->
                     <a href="dashboard_user.php">Dashboard</a>
-                    
-                    <!-- 2. MY POSTS -->
-                    <a href="myposts_user.php">My Posts</a>
-                    
-                    <!-- 3. ABOUT (This Page) -->
-                    <a href="about_us.php" style="color: #2289e6; font-weight: 700;">About</a>
-                    
-                    <!-- 4. LOG OUT -->
+                    <a href="myposts_user.php" style="color: #2289e6; font-weight: 700;">My Posts</a>
+                    <a href="about_us.php">About</a>
                     <a class="logout" href="../../logout.php" onclick="return confirm('Are you sure you want to LOG OUT?');">Log out</a>
                 </div>
             </div>
-            <strong><a class="navbar-brand me-auto" href="dashboard_user.php">Campus<span class="find">Find</span></a></strong>
-            <a class="navbar-brand ms-auto text-white" href="#">Hello, <?php echo htmlspecialchars($user["username"]); ?></a>
+            <strong><a class="navbar-brand me-auto" href="#">Campus<span class = "find">Find</a></strong>
+            
+            <?php $userId = $_SESSION['user']['id']; 
+            $notifCount = $db->querySingle("
+                SELECT COUNT(*) 
+                FROM notifications 
+                WHERE status = 'unread' AND notify_to = $userId AND type = 'to_user'
+            ");?>
+            <div class = "ms-auto">
+                <a href="myposts_user.php" class="notif mx-4">
+                    🔔<?= $notifCount ?>
+                </a>
+                <a class="navbar-brand text-white" href="#">Hello, <?php echo htmlspecialchars($user["username"]); ?></a>
+            </div>
         </div>
     </nav>
 

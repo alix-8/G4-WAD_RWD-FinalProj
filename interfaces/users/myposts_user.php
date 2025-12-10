@@ -224,43 +224,33 @@ $sql .= " ORDER BY items.id DESC";
 </head>
 <body class="m-0 border-0 bd-example m-0 border-0">
     <nav class="navbar p-3 sticky-top">
-        <div class="container-fluid">
-            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
-                    data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                <img src="/assets/hamburger.png" alt="hamburger icon" width="20px" height="20px">
-            </button>
-            <div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1"
-                id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
-                <div class="offcanvas-body">
-                    <!-- 1. DASHBOARD (Active) -->
-                    <!-- Added bold/color style here because we are ON the dashboard -->
-                    <a href="dashboard_user.php">Dashboard</a>
-
-                    <!-- 2. MY POSTS -->
-                    <a href="myposts_user.php" style="color: #2289e6; font-weight: 700;">My Posts</a>
-
-                    <!-- 3. ABOUT -->
-                    <a href="about_us.php">About</a>
-
-                    <!-- 4. LOG OUT -->
-                    <a class="logout" href="../../logout.php" onclick="return confirm('Are you sure you want to LOG OUT?');">Log out</a>
-                </div>
+        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
+                data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions"
+                aria-expanded="false" aria-label="Toggle navigation">
+            <img src="/assets/hamburger.png" alt="hamburger icon" width="20px" height="20px">
+        </button>
+        <div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1"
+            id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
+            <div class="offcanvas-body">
+                <a href="dashboard_user.php">Dashboard</a>
+                <a href="myposts_user.php" style="color: #2289e6; font-weight: 700;">My Wall</a>
+                <a href="about_us.php">About</a>
+                <a class="logout" href="../../logout.php" onclick="return confirm('Are you sure you want to LOG OUT?');">Log out</a>
             </div>
-            <strong><a class="navbar-brand me-auto" href="#">Campus<span class = "find">Find</a></strong>
-            
-            <?php $userId = $_SESSION['user']['id']; 
-            $notifCount = $db->querySingle("
-                SELECT COUNT(*) 
-                FROM notifications 
-                WHERE status = 'unread' AND notify_to = $userId AND type = 'to_user'
-            ");?>
-            <div class = "ms-auto">
-                <a href="myposts_user.php" class="notif mx-4">
-                    🔔<?= $notifCount ?>
-                </a>
-                <a class="navbar-brand text-white" href="#">Hello, <?php echo htmlspecialchars($user["username"]); ?></a>
-            </div>
+        </div>
+        <strong><a class="navbar-brand me-auto d-none d-md-inline" href="#">Campus<span class = "find">Find</a></strong>
+        
+        <?php $userId = $_SESSION['user']['id']; 
+        $notifCount = $db->querySingle("
+            SELECT COUNT(*) 
+            FROM notifications 
+            WHERE status = 'unread' AND notify_to = $userId AND type = 'to_user'
+        ");?>
+        <div class = "ms-auto">
+            <a href="myposts_user.php" class="notif mx-4">
+                🔔<?= $notifCount ?>
+            </a>
+            <a class="navbar-brand text-white" href="#">Hello, <?php echo htmlspecialchars($user["username"]); ?></a>
         </div>
     </nav>
 
@@ -509,7 +499,7 @@ $sql .= " ORDER BY items.id DESC";
         <!-- hero section -->
         <section class = "heroSection pt-3">
             <div>
-                <h1><strong>My Posts</strong></h1>
+                <h1><strong>My Wall</strong></h1>
                 <p class = "subtext">Review your posts and check your notification</p>
             </div>
             <a id = "postItems" type="button" class="btn btn-primary ms-auto" href="?action=create">
