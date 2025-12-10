@@ -603,20 +603,21 @@ $sql .= " ORDER BY items.id DESC";
             </form>
             
         </div>
-            
-        <!-- notifss -->
+        <!-- ================= -->   
+        <!-- NOTIFICATIONS HEREEE -->
+         <!-- ================= -->   
         <!-- card -->
-        <div class="row mt-3">
-            <h3><strong>My Notifications</strong></h3>
+        <div class="notifications row mt-3">
             <?php if (empty($adminNotifications)): ?>
                 <p class="text-muted">No notifications yet.</p>
             <?php else: ?>
+                <h3><strong>My Notifications</strong></h3>
                 <?php foreach ($adminNotifications as $note): ?>
                     <div class="col-md-6">
                         <a href="../admin/dashboard_admin.php#item-<?= $note['item_id']; ?>"
                         class="text-decoration-none text-dark">
 
-                            <div class="card p-3 my-2 w-100">
+                            <div class="notificationCard p-3 my-2 w-100">
 
                                 <strong><?= htmlspecialchars($note['item_title']); ?></strong>
 
@@ -638,7 +639,7 @@ $sql .= " ORDER BY items.id DESC";
 
 
 
-        <!-- cards dito -->
+        <!-- my posts cards dito -->
         <?php
         $result = $db->query($sql);
         $items = [];

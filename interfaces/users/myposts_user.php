@@ -549,14 +549,16 @@ $sql .= " ORDER BY items.id DESC";
          
         <!-- notification dito -->
         <div class="row mt-3">
+            
             <?php if (empty($userNotifications)): ?>
                 <p class="text-muted">No notifications yet.</p>
             <?php else: ?>
+                <h3><strong>My Notifications</strong></h3>
                 <?php foreach ($userNotifications as $note): ?>
                     <div class="col-md-6">
                         <a href="myposts_user.php#item-<?= $note['item_id']; ?>"
                         class="text-decoration-none text-dark">
-                            <div class="card p-3 my-2">
+                            <div class="notificationCard p-3 my-2">
                                 <strong><?= htmlspecialchars($note['item_title']); ?></strong>
                                 <p class="mb-1"><?= htmlspecialchars($note['message']); ?></p>
                                 <small class="text-secondary"><?= $note['created_at']; ?></small>
@@ -580,6 +582,7 @@ $sql .= " ORDER BY items.id DESC";
         } ?>
 
         <div class="row">
+            <h3><strong>My Posts</strong></h3>
             <?php if (empty($items)): ?>
                 <p class = "noItemFound">No items found.</p>
             <?php else: ?>
