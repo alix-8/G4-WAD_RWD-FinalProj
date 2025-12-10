@@ -108,6 +108,7 @@ button.searchBtn {
 }
 
 .offcanvas-body {
+    font-size: 1.20rem;
     background-color: var(--bg);
     display: flex;
     flex-direction: column;
@@ -116,10 +117,21 @@ button.searchBtn {
 .offcanvas-body a{
     text-decoration: none;
     color: black;
+    padding: 0 2px 0 3px;
+    border-radius: 2px;
+}
+
+.offcanvas-body a:hover{
+    color: white;
+    background-color: var(--button);
 }
 
 .logout{
     color: var(--lost-color) !important;
+}
+
+.logout:hover{
+    background-color:#6b6b6b !important;
 }
 
 .offcanvas-body a{

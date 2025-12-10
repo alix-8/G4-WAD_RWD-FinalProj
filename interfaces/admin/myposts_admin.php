@@ -558,7 +558,7 @@ $sql .= " ORDER BY items.id DESC";
         <!-- hero section -->
         <section class = "heroSection pt-3">
             <div>
-                <h1><strong>My Posts</strong></h1>
+                <h1><strong>My Wall</strong></h1>
                 <p class = "subtext">Review your posts and check your notification</p>
             </div>
             <a id = "postItems" type="button" class="btn btn-primary ms-auto" href="?action=create">
@@ -613,7 +613,10 @@ $sql .= " ORDER BY items.id DESC";
             <?php if (empty($adminNotifications)): ?>
                 <p class="text-muted">No notifications yet.</p>
             <?php else: ?>
-                <h3><strong>My Notifications</strong></h3>
+                <h3><strong>
+                    <img src="/assets/bell.png" alt="bell" style="width:25px">
+                    My Notifications
+                </strong></h3>
                 <?php foreach ($adminNotifications as $note): ?>
                     <div class="col-md-6">
                         <a href="../admin/dashboard_admin.php#item-<?= $note['item_id']; ?>"

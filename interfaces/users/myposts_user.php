@@ -553,7 +553,10 @@ $sql .= " ORDER BY items.id DESC";
             <?php if (empty($userNotifications)): ?>
                 <p class="text-muted">No notifications yet.</p>
             <?php else: ?>
-                <h3><strong>My Notifications</strong></h3>
+                <h3><strong>
+                    <img src="/assets/bell.png" alt="bell" style="width:25px">
+                    My Notifications
+                </strong></h3>
                 <?php foreach ($userNotifications as $note): ?>
                     <div class="col-md-6">
                         <a href="myposts_user.php#item-<?= $note['item_id']; ?>"
