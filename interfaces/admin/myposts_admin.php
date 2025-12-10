@@ -365,11 +365,6 @@ $sql .= " ORDER BY items.id DESC";
                         </div>
                     </div>
 
-                    <!-- buttonsss -->
-                    <div class="d-flex gap-2 mt-2">
-                        <button class="btn btn-primary w-50" type="submit">Publish Post</button>
-                        <a class="btn btn-secondary w-50" href="dashboard_admin.php" style="background-color: #cbd5e1; color: #334155; border:none;">Cancel</a>
-                    </div>
                 </div>
 
                 <!-- RIGHT COLUMN: IMAGE UPLOAD -->
@@ -391,6 +386,11 @@ $sql .= " ORDER BY items.id DESC";
                         </div>
                     </div>
                 </div>
+                <!-- buttonsss -->
+                    <div class="d-flex gap-2 mt-2">
+                        <button class="btn btn-primary w-50" type="submit">Publish Post</button>
+                        <a class="btn btn-secondary w-50" href="dashboard_admin.php" style="background-color: #cbd5e1; color: #334155; border:none;">Cancel</a>
+                    </div>
 
             </div>
         </form>

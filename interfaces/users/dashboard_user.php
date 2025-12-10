@@ -267,7 +267,7 @@ $sql .= " ORDER BY items.id DESC";
                     
                     <a href="dashboard_user.php" style="color: #2289e6; font-weight: 700;">Dashboard</a>
 
-                    <a href="myposts_user.php">My Posts</a>
+                    <a href="myposts_user.php">My Wall</a>
 
                     <a href="about_us.php">About</a>
 
@@ -535,11 +535,11 @@ $sql .= " ORDER BY items.id DESC";
         <!-- hero section -->
         <section class = "heroSection pt-3">
             <div>
-                <h1><strong>My Posts</strong></h1>
-                <p class = "subtext">Review your posts and check your notification</p>
+                <h1><strong>Dashboard</strong></h1>
+                <p class = "subtext">Browse, search or post items</p>
             </div>
             <a id = "postItems" type="button" class="btn btn-primary ms-auto" href="?action=create">
-                Post Item +
+                Report Lost Item +
             </a>
         </section>
 

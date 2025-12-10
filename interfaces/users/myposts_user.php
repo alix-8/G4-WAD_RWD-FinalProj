@@ -296,8 +296,6 @@ $sql .= " ORDER BY items.id DESC";
                     <!-- Row: Status & Category -->
                     <div class="form-row">
                         <div class="input-group-modern">
-                        </div>
-                        <div class="input-group-modern">
                             <label>Category</label>
                             <select name="category_id" id="category_id" required>
                                 <option value="">Select Category</option>
@@ -337,11 +335,7 @@ $sql .= " ORDER BY items.id DESC";
                         </div>
                     </div>
 
-                    <!-- buttonsss -->
-                    <div class="d-flex gap-2 mt-2">
-                        <button class="btn btn-primary w-50" type="submit">Publish Post</button>
-                        <a class="btn btn-secondary w-50" href="myposts_user.php" style="background-color: #cbd5e1; color: #334155; border:none;">Cancel</a>
-                    </div>
+                    
                 </div>
 
                 <!-- RIGHT COLUMN: IMAGE UPLOAD -->
@@ -363,7 +357,11 @@ $sql .= " ORDER BY items.id DESC";
                         </div>
                     </div>
                 </div>
-
+                <!-- buttonsss -->
+                    <div class="d-flex gap-2 mt-2">
+                        <button class="btn btn-primary w-50" type="submit">Publish Post</button>
+                        <a class="btn btn-secondary w-50" href="myposts_user.php" style="background-color: #cbd5e1; color: #334155; border:none;">Cancel</a>
+                    </div>
             </div>
         </form>
 
@@ -515,7 +513,7 @@ $sql .= " ORDER BY items.id DESC";
                 <p class = "subtext">Review your posts and check your notification</p>
             </div>
             <a id = "postItems" type="button" class="btn btn-primary ms-auto" href="?action=create">
-                Post Item +
+                Report Lost Item +
             </a>
         </section>
 

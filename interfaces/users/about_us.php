@@ -147,7 +147,7 @@ $user = $_SESSION["user"];
                     </h2>
                     <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
                         <div class="accordion-body">
-                            Browse the Dashboard for "Found" items. If you see something that belongs to you, click <strong>"See Details"</strong> and then click the Claim button (if enabled) or visit the Lost & Found office with proof of ownership.
+                            Browse the Dashboard for "Found" items. If you see something that belongs to you, click <strong>"See Details"</strong> to see more infos about the item then visit the Lost & Found office with proof of ownership.
                         </div>
                     </div>
                 </div>
