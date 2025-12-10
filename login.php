@@ -13,6 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $result = $stmt->execute();
     $user = $result->fetchArray(SQLITE3_ASSOC);
 
+    // authentication
     if ($user && password_verify($password, $user["password_hash"])) {
         $_SESSION["user"] = [
             "id" => $user["id"],

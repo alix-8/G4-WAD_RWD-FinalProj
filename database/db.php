@@ -119,7 +119,7 @@ function create_notifications_table(): void
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             item_id INTEGER,
             user_id INTEGER,      -- sino nag triggered ng notification
-            notify_to INTEGER,    -- cno dapat magre receive
+            notify_to INTEGER,    -- cno dapat magre receive (id 'to)
             message TEXT,
             type TEXT,            -- 'to_admin' | 'to_user'
             status TEXT DEFAULT 'unread',

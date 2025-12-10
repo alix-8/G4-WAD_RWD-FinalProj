@@ -164,7 +164,9 @@ if ($action === "claim") {
     }
 }
 
+// =====================================
 // fetch notifss from user to admin
+// =====================================
 $adminNotifications = [];
 
 $q = $db->query("
@@ -195,7 +197,7 @@ while($row = $q->fetchArray(SQLITE3_ASSOC)) {
 
 
 // ==========================================
-// LOGIC: FETCH ITEMS (SEARCH / FILTER / ONLY USER POSTS)
+// LOGIC: FETCH ITEMS (SEARCH + FILTER NA)
 // ==========================================
 $where = [];
 
@@ -487,7 +489,7 @@ $sql .= " ORDER BY items.id DESC";
                         <label>Found Location</label>
                         <input type="text" name="location_found" id="location_found" 
                             placeholder="Where was it found?"
-                            value="<?php echo htmlspecialchars($item['location_found']); ?>">
+                            value="<?php echo htmlspecialchars($item['location_found']); ?>" disabled>
                     </div>
                 </div>
 
@@ -768,4 +770,5 @@ $sql .= " ORDER BY items.id DESC";
     <?php endif; ?>
 </div>   
   </body>
+<script src="../../javascripts/form.js"></script>
 </html>

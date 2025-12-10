@@ -111,7 +111,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && $action === "edit") {
         ");
         $stmt->bindValue(1, $title, SQLITE3_TEXT);
         $stmt->bindValue(2, $description, SQLITE3_TEXT);
-        $stmt->bindValue(3, $category_id, SQLITE3_INTEGER); // Fixed type to INTEGER
+        $stmt->bindValue(3, $category_id, SQLITE3_INTEGER);
         $stmt->bindValue(4, $item_status, SQLITE3_TEXT);
         $stmt->bindValue(5, $location_lost, SQLITE3_TEXT);
         $stmt->bindValue(6, $location_found, SQLITE3_TEXT);
@@ -375,12 +375,6 @@ $sql .= " ORDER BY items.id DESC";
                             </div>
                         </div>
                     </div>
-
-                    <!-- buttonsss -->
-                    <div class="d-flex gap-2 mt-2">
-                        <button class="btn btn-primary w-50" type="submit">Publish Post</button>
-                        <a class="btn btn-secondary w-50" href="dashboard_admin.php" style="background-color: #cbd5e1; color: #334155; border:none;">Cancel</a>
-                    </div>
                 </div>
 
                 <!-- RIGHT COLUMN: IMAGE UPLOAD -->
@@ -402,7 +396,11 @@ $sql .= " ORDER BY items.id DESC";
                         </div>
                     </div>
                 </div>
-
+                <!-- buttonsss -->
+                <div class="d-flex gap-2 mt-2">
+                    <button class="btn btn-primary w-50" type="submit">Publish Post</button>
+                    <a class="btn btn-secondary w-50" href="dashboard_admin.php" style="background-color: #cbd5e1; color: #334155; border:none;">Cancel</a>
+                </div>
             </div>
         </form>
 
