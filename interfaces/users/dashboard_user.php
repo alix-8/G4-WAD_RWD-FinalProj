@@ -695,6 +695,7 @@ $sql .= " ORDER BY items.id DESC";
                                             <a href="about_us.php#lf_office">Visit FAQs for Lost & Found Office Infos</a>
                                         <?php else: ?>
                                             <p>Is this yours? If you think it is, head to the Lost and Found Office, prove possesion and claim now!</p>
+                                            <a href="about_us.php#lf_office">Lost and Found Office Info</a>
                                         <?php endif; ?>
                                     </div>
                                     </div>
