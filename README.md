@@ -59,6 +59,6 @@ A PHP + SQLite web application where students or staff can post items they lost 
 - Post lost items (A user’s lost item post will notify admin to view their post.)
 - Update, and delete items and details functions (only for their posts)
 
-**Instruction on how to run:**
+## Instruction on how to run:
 -  Download the repo
 - input php -S localhost:7000 on the terminal
