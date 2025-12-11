@@ -1,12 +1,13 @@
 /* Reusable footer: SAME for user/admin */
 
 footer{
+    background-color: white;
     color: rgb(99, 99, 99);
     margin-top: 1vh;
     padding:2rem
 }
 
-.layer1, .layer2 {
+.layer2 {
     border-top: solid 1px gray;
 }
 
