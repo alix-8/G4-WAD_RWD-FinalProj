@@ -6,11 +6,12 @@ A PHP + SQLite web application where students or staff can post items they lost 
 ## Team Roles & Responsibilities
 | Role | Members | Responsibilities |
 |------|---------|------------------|
-| **Designing (UI/UX)** | Mel & Bon | • Wireframe<br>• Handle CSS and responsiveness |
-| **Coding / Backend Developer** | Stephanne, Bon, & Mel | • PHP logic<br>• Form and validation |
-| **Database Designer** | Jay‑R & Jess | • Design and manage the SQLite database |
+| **Designing (UI/UX)** | Magdaraog & Bon | • Wireframe<br>• Handle CSS and responsiveness |
+| **Coding / Backend Developer** | Bon, Buenafllor, & Magdaraog | • PHP logic<br>• Form and validation |
+| **Database Designer** | Santos & Carbonel | • Design and manage the SQLite database |
 | **Quality Assurance (QA)** | All Members | • Test all system features for errors<br>• Report bugs and ensure the system runs smoothly before submission |
 
+--------------------------------------------------------------------------------------------------------
 **Individual Contributions & Task Breakdown**
 ​The following tasks were assigned and tracked across the development timeline:
 ## Backend & Functional Development
