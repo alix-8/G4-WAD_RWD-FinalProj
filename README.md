@@ -40,7 +40,7 @@ A PHP + SQLite web application where students or staff can post items they lost 
 
 | Member | Responsibilities |
 |--------|------------------|
-| **All Members** | • Documentation of the project |
+| **Carbonel, Jess** | • Documentation of the project |
 
 
 **FEATURES:**
