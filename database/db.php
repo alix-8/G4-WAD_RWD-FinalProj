@@ -26,31 +26,6 @@ function get_db(): SQLite3
         name TEXT UNIQUE NOT NULL
     )");
 
-    // ITEMS TABLE
-    $db->exec("CREATE TABLE IF NOT EXISTS items (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        user_id INTEGER NOT NULL,
-        title TEXT NOT NULL,
-        description TEXT,
-        item_status TEXT NOT NULL,     -- 'lost' or 'found'
-        category_id INTEGER,
-        location_lost TEXT,
-        location_found TEXT,
-        date_lost_or_found DATE,
-        current_location TEXT,
-        image_path TEXT,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-        -- updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-        claimed_by_user_id INTEGER,
-        claimed_at DATETIME,
-
-        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-        FOREIGN KEY (claimed_by_user_id) REFERENCES users(id) ON DELETE SET NULL,
-        FOREIGN KEY (category_id) REFERENCES categories(id)
-    )");
-
-    // echo "Database and tables created successfully!\n";
-
     return $db;
 }
 
@@ -132,8 +107,55 @@ function create_notifications_table(): void
     echo "Notifications table created successfully\n";
 }
 
+function add_items_table(): void
+{
+    $db = get_db();
+
+    $stmt = $db->prepare("
+    -- Step 2: Create new table with claimed_by TEXT
+    CREATE TABLE IF NOT EXISTS items (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER NOT NULL,
+        title TEXT NOT NULL,
+        description TEXT,
+        item_status TEXT NOT NULL,
+        category_id INTEGER,
+        location_lost TEXT,
+        location_found TEXT,
+        date_lost_or_found DATE,
+        current_location TEXT,
+        image_path TEXT,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        claimed_by TEXT,
+        claimed_at DATETIME,
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+        FOREIGN KEY (category_id) REFERENCES categories(id)
+    );
+    ");
+
+    $stmt->execute();
+
+    echo "Table added successfully\n";
+}
+
+
+function delete_table_contents(): void
+{
+    $db = get_db();
+
+    $stmt = $db->prepare("
+    DELETE FROM notifications;
+    VACUUM;
+    ");
+
+    $stmt->execute();
+
+    echo "Table contents deleted successfully\n";
+}
 
 get_db();
+// delete_table_contents();
+// add_items_table()
 // create_notifications_table();
 // add_categories();
 // add_admin();

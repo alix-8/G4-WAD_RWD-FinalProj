@@ -93,17 +93,24 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && $action === "store") {
 
     $lastItemId = $db->lastInsertRowID();
 
-$notif = $db->prepare("
-    INSERT INTO notifications (item_id, user_id, notify_to, message, type)
-    VALUES (?, ?, ?, ?, ?)
-");
+    $notif = $db->prepare("
+        INSERT INTO notifications (item_id, user_id, notify_to, message, type)
+        VALUES (?, ?, ?, ?, ?)
+    ");
 
-$notif->bindValue(1, $lastItemId, SQLITE3_INTEGER);
-$notif->bindValue(2, $user_id, SQLITE3_INTEGER);
-$notif->bindValue(3, 1, SQLITE3_INTEGER); // 1 = user ID (adjust if needed)
-$notif->bindValue(4, "User posted a lost item requiring review", SQLITE3_TEXT);
-$notif->bindValue(5, "to_user", SQLITE3_TEXT);
-$notif->execute();
+    $notif->bindValue(1, $lastItemId, SQLITE3_INTEGER);
+    $notif->bindValue(2, $user_id, SQLITE3_INTEGER);
+    $notif->bindValue(3, 1, SQLITE3_INTEGER); // 1 = user ID (adjust if needed)
+    $notif->bindValue(4, "User posted a lost item requiring review", SQLITE3_TEXT);
+    $notif->bindValue(5, "to_adminr", SQLITE3_TEXT);
+    $notif->execute();
+
+    header("Location: dashboard_user.php?msg=Item+Posted.+Admin+will+notify+if+an+item+match+is+found.");
+        exit;
+    } else {
+        $error = "Title and Type are required.";
+        $action = "create";
+    }
 
 }
 
@@ -182,7 +189,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && $action === "edit") {
         $action = "edit";
         $_GET['id'] = (string)$id;
     }
-}
 }
 
 // ==========================================

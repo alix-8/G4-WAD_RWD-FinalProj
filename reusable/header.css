@@ -160,3 +160,11 @@ button.searchBtn {
 .form-select option:hover{
     background-color: var(--button) !important;
 }
+
+.noItemFound{
+    padding: 20vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}

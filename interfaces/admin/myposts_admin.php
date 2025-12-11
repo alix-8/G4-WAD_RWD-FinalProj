@@ -609,14 +609,15 @@ $sql .= " ORDER BY items.id DESC";
         <!-- NOTIFICATIONS HEREEE -->
          <!-- ================= -->   
         <!-- card -->
-        <div class="notifications row mt-3">
+        <div class="notifications row mt-5">
+             <h3><strong>
+                <img src="/assets/bell.png" alt="bell" style="width:25px">
+                My Notifications
+            </strong></h3>
             <?php if (empty($adminNotifications)): ?>
                 <p class="text-muted">No notifications yet.</p>
             <?php else: ?>
-                <h3><strong>
-                    <img src="/assets/bell.png" alt="bell" style="width:25px">
-                    My Notifications
-                </strong></h3>
+               
                 <?php foreach ($adminNotifications as $note): ?>
                     <div class="col-md-6">
                         <a href="../admin/dashboard_admin.php#item-<?= $note['item_id']; ?>"

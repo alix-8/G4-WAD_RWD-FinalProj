@@ -140,6 +140,11 @@ if ($action === "delete") {
         $stmt->bindValue(1, $id, SQLITE3_INTEGER);
         $stmt->execute();
 
+        // Delete related notifications
+        $deleteNotif = $db->prepare("DELETE FROM notifications WHERE item_id = ?");
+        $deleteNotif->bindValue(1, $id, SQLITE3_INTEGER);
+        $deleteNotif->execute();
+
         header("Location: dashboard_admin.php?msg=Item+Deleted");
         exit;
     }
@@ -632,7 +637,10 @@ $sql .= " ORDER BY items.id DESC";
 
         <div class="row">
             <?php if (empty($items)): ?>
-                <p class = "noItemFound">No items found.</p>
+                <p class = "noItemFound">
+                    <img src="/assets/empty.png" alt="Empty box" style="width: 300px;">
+                    No items found.
+                </p>
             <?php else: ?>
                 <?php $itemCount = count($items);?>
                 <p>Showing <strong><?php echo $itemCount; ?></strong>  items.</p>
