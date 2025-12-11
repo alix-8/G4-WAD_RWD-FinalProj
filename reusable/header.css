@@ -25,9 +25,9 @@
 
 body {
   margin: 0;
-  height: 100vh; /* full viewport height */
+  height: 100vh;
   background:linear-gradient(to right, #e7edeb 0%, #ecf6fe 50%, #c7f2e4 100%);
-  background-attachment: fixed; /* keeps gradient steady when scrolling */
+  background-attachment: fixed;
 }
 
 /* NAVIGATIONNN */

@@ -43,7 +43,7 @@
 
 .card:hover {
     box-shadow: 0 12px 20px rgba(0,0,0,0.2);
-    border-color: #ddd;
+    border-color: #2289e6;
     cursor: pointer;
 }
 

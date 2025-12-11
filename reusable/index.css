@@ -15,15 +15,42 @@
     --pending-color: #ffa629;
 }
 
+*{
+    font-family: "Plus Jakarta Sans", sans-serif;
+}
+
 body{
     background: linear-gradient(to left,  #ceede3,#afdccd, #8bcdb7, #228be6c5);
+    display: flex;
+    flex-direction: column;
+}
 
+#learnmore{
+    color: var(--color-primary);
+    background-color: #f8f8f8;
+    width: fit-content;
+}
+
+.lm{
+    display: flex;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.find{
+    color: var(--blue-primary);
+}
+
+
+.section1 {
+    margin: 15rem 0 !important;
 }
 
 .logo-img {
-    margin: 20vh 5vh 0 5vh;
     display: flex;
     flex-direction: row;
+    align-items: center;
+    justify-content: center;
 }
 
 .logo-img h1 {
@@ -31,13 +58,13 @@ body{
   justify-content: center;
   align-items: start;
   height: 20vh; */
-  font-size: 7vh;
+  font-size: 12vh;
   font-family: "Plus Jakarta Sans", sans-serif;
 }
 
 .logo-img img{
-    width: 3rem;
-    height: 3rem;
+    width: 4.5rem;
+    height: 4.5rem;
 }
 
 .find{
@@ -45,15 +72,51 @@ body{
 }
 
 .slogan{
-    color: #000000;
+    color: #424242;
     text-align: center;
+    font-size: 15px;
+    padding: 4px 8px !important;
+    background-color: #e2e8f0;
+    opacity: 70%;
+    border-radius: 19px;
+}
+
+
+/* OUR MISSION NA PART */
+.hero-section {
+    background: white !important;
+    border-radius: 20px !important;
+    margin: 3rem 0 !important;
+    box-shadow: 0 4px 15px rgba(34, 137, 230, 0.15);
+}
+
+.hero-section p{
+    color: rgb(91, 91, 91) !important;
+}
+
+.mision{
+    color: #4a4a4a;
+    width: 20rem;
+    display: flex;
+    justify-content: center;
 }
 
 .wrapper-index {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 50vh;
+}
+
+.actions{
+    flex-direction: row;
+}
+
+.actions a{
+    width: 10vw !important;
+}
+
+.actions a:hover{
+    text-decoration: none;
 }
 
 .container-index {
@@ -68,3 +131,10 @@ body{
   max-width: 400px;
 }
 
+footer{
+    background-color: #f8f8f8 !important;
+}
+
+.layer1{
+    border: none !important;
+}
