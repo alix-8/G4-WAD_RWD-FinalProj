@@ -29,6 +29,13 @@ body{
     color: var(--color-primary);
     background-color: #f8f8f8;
     width: fit-content;
+    text-decoration: none;
+}
+
+#learnmore:hover{
+    color: var(--color-primary);
+    background-color: #cecece;
+    text-decoration: none;
 }
 
 .lm{

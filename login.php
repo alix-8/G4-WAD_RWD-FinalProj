@@ -52,6 +52,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <!-- LEFT SIDE -->
         <div class="left">
             <div class="container">
+                 <p><a href="index.html" class="m-0">⬅️ Back to landing page</a></p>
                 <h2>Login to Campus Find</h2>
                 <?php if (isset($_GET["registered"])) echo "<p style='color:green;'>Registration successful! Please login.</p>"; ?>
                 <?php if (!empty($error)) echo "<p style='color:red;'>$error</p>"; ?>

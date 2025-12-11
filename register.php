@@ -61,6 +61,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <!-- RIGHT SIDE -->
     <div class="right-register  m-0">
       <div class="container">
+          <p><a href="index.html" class="m-0">⬅️ Back to landing page</a></p>
           <h2>Create an Account</h2>
           <?php if (!empty($error)) echo "<p style='color:red;'>$error</p>"; ?>
           <form method="POST" action="">
