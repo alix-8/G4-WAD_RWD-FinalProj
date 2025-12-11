@@ -22,6 +22,15 @@
     font-family: "Plus Jakarta Sans", sans-serif;
 }
 
+
+body {
+  margin: 0;
+  height: 100vh; /* full viewport height */
+  background:linear-gradient(to right, #e7edeb 0%, #ecf6fe 50%, #c7f2e4 100%);
+  background-attachment: fixed; /* keeps gradient steady when scrolling */
+}
+
+/* NAVIGATIONNN */
 .navbar .container-fluid { flex-wrap: nowrap !important; }
 .navbar .navbar-brand, .navbar .navbar-text, .navbar .notif { white-space: nowrap !important; }
 
@@ -66,27 +75,6 @@ nav{
 #postItems:active{
     outline: none !important;
     box-shadow: none !important;
-}
-
-button.searchBtn {
-    background-color: var(--blue-primary) !important; 
-    color: white;
-    border: none;
-    padding: 8px 20px;
-    border-radius: 8px;
-}
-
-.search-filter-container{
-    border: 1px solid #a9a8a8;
-    border-radius: 8px;
-    padding: 10px;
-}
-
-#filterStatus, #filterCategory {
-    border-color: var(--blue-primary); 
-    padding: 8px 12px !important;
-    border-radius: 8px;
-    cursor: pointer;
 }
 
 /* button 'to para sa "see details" */
@@ -139,6 +127,16 @@ button.searchBtn {
 }
 
 /* para sa close button ng alert message */
+.alrtsuccess {
+    color: white !important;
+    background-color: rgb(36, 219, 79) !important;
+}
+
+.alrtnotsuccess {
+    color: white !important;
+    background-color: rgb(219, 39, 36) !important;
+}
+
 .alert .btn-close {
     float: right;
 }

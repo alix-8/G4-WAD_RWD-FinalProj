@@ -618,7 +618,10 @@ $sql .= " ORDER BY items.id DESC";
         <div class="row">
             <h3><strong>My Posts</strong></h3>
             <?php if (empty($items)): ?>
-                <p class = "noItemFound">No items found.</p>
+                <p class = "noItemFound">
+                    <img src="/assets/empty.png" alt="Empty box" style="width: 300px;">
+                    No items found.
+                </p>
             <?php else: ?>
                 <?php $itemCount = count($items);?>
                 <p>Showing <strong><?php echo $itemCount; ?></strong>  items.</p>

@@ -301,12 +301,12 @@ $sql .= " ORDER BY items.id DESC";
 <div class="container my-3">
     <!-- alert messages -->
     <?php if ($msg): ?>
-        <div class="alert alert-success"><?php echo htmlspecialchars($msg); ?>
+        <div class="alert alert-success alrtsuccess"><?php echo htmlspecialchars($msg); ?>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>
     <?php endif; ?>
 
     <?php if ($error): ?>
-        <div class="alert alert-danger"><?php echo htmlspecialchars($error); ?>
+        <div class="alert alert-danger alrtnotsuccess"><?php echo htmlspecialchars($error); ?>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>
     <?php endif; ?>
 
