@@ -30,7 +30,7 @@ A PHP + SQLite web application where students or staff can post items they lost 
 | Member | Responsibilities |
 |--------|------------------|
 | **Bon, Alexandrian O.** | • Responsible for Admin and User Interface UI |
-| **Buenaflor, Anne Stephanne** | • Modified style.css (Index, Registration, Login)<br>• Developed the About Page (with instructions to extend content to the landing page if needed) |
+| **Buenaflor, Anne Stephanne** | • Modified style.css (Index, Registration, Login)<br>• Developed the About Page |
 | **Magdaraog, Mel and Santos, Jay R** | • Styled the input forms |
 
 
