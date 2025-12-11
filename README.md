@@ -1,6 +1,6 @@
-**CampusFind**
-“Your Campus Lost & Found Hub Where Lost Items Find Their Owners.”
-A PHP + SQLite web application where students or staff can post items they lost or found inside campus. Users can submit details, update their posts, delete them, and mark items as claimed when they are returned to the owner.
+## CampusFind
+**“Your Campus Lost & Found Hub Where Lost Items Find Their Owners.”**
+A PHP + SQLite web application where students or staff can post items they lost or found inside campus. Users can submit details, update their posts, delete them, and mark items as claimed when they are returned to the owner. Admin (Lost and Found Office) can manage the posts, handle reports, and help user find items.
 
 **ROLES**
 ## Team Roles & Responsibilities
