@@ -153,21 +153,30 @@ if ($action === "claim") {
     $id = (int)($_GET['id'] ?? 0);
 
     if ($id > 0) {
+
+        // Update item status to claimed
         $stmt = $db->prepare("UPDATE items SET item_status = 'claimed' WHERE id = ?");
         $stmt->bindValue(1, $id, SQLITE3_INTEGER);
         $stmt->execute();
 
-        header("Location: dashboard_admin.php?msg=Item+Status+Updated+To+Claimed");
+        // Delete related notifications
+        $deleteNotif = $db->prepare("UPDATE notifications SET status = 'resolved' WHERE item_id = ?");
+        $deleteNotif->bindValue(1, $id, SQLITE3_INTEGER);
+        $deleteNotif->execute();
+
+        header("Location: dashboard_admin.php?msg=Item+Claimed.");
         exit;
     } else {
         $error = "Invalid item ID for claiming.";
     }
 }
 
+
 // =====================================
 // fetch notifss from user to admin
 // =====================================
 $adminNotifications = [];
+$user_id = $_SESSION['user']['id'];
 
 $q = $db->query("
     SELECT 
@@ -185,7 +194,7 @@ $q = $db->query("
     LEFT JOIN items i ON n.item_id = i.id
     LEFT JOIN categories c ON i.category_id = c.id
     LEFT JOIN users u ON i.user_id = u.id
-    WHERE n.status != 'resolved'
+    WHERE n.notify_to = $user_id AND n.status != 'resolved' AND  n.type = 'to_admin'
     ORDER BY n.created_at DESC
 ");
 
@@ -223,7 +232,7 @@ if (!empty($_GET['item_status'])) {
     $where[] = "items.item_status = '$status'";
 }
 
-$sql = "SELECT items.*, categories.name AS category_name, users.username AS posted_by
+$sql = "SELECT items.*, categories.name AS category_name, users.username AS posted_by, items.created_at AS date_created
         FROM items
         LEFT JOIN categories ON items.category_id = categories.id
         LEFT JOIN users ON users.id = items.user_id";
@@ -748,7 +757,10 @@ $sql .= " ORDER BY items.id DESC";
                                                         <?php endif; ?>  
                                                         <?php echo htmlspecialchars($it["date_lost_or_found"]); ?> <br> 
                                                     </div>
-                                                    
+                                                        <div>
+                                                            <strong>Posted at<br></strong>
+                                                            <?php echo htmlspecialchars($it["date_created"]);?>
+                                                        </div>
                                                 </div>
                                             </p>
                                         </div>
@@ -762,7 +774,7 @@ $sql .= " ORDER BY items.id DESC";
                                             
                                             <a href="?action=edit&id=<?php echo (int)$it["id"]; ?>" class="btn btn-warning">Edit</a>
                                             <a href="?action=delete&id=<?php echo (int)$it["id"]; ?>" class="btn btn-danger"
-                                    onclick="return confirm('Are you sure you want to delete this item?');">Delete</a>
+                                            onclick="return confirm('Are you sure you want to delete this item?');">Delete</a>
                                         </div>
                                         </div>
                                     </div>

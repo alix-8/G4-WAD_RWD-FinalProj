@@ -102,7 +102,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && $action === "store") {
     $notif->bindValue(2, $user_id, SQLITE3_INTEGER);
     $notif->bindValue(3, 1, SQLITE3_INTEGER); // 1 = user ID (adjust if needed)
     $notif->bindValue(4, "User posted a lost item requiring review", SQLITE3_TEXT);
-    $notif->bindValue(5, "to_adminr", SQLITE3_TEXT);
+    $notif->bindValue(5, "to_admin", SQLITE3_TEXT);
     $notif->execute();
 
     header("Location: dashboard_user.php?msg=Item+Posted.+Admin+will+notify+if+an+item+match+is+found.");
@@ -231,7 +231,7 @@ if (!empty($_GET['item_status'])) {
     $where[] = "items.item_status = '$status'";
 }
 
-$sql = "SELECT items.*, categories.name AS category_name, users.role AS posted_by_role
+$sql = "SELECT items.*, categories.name AS category_name, users.role AS posted_by_role, items.created_at AS date_created
         FROM items
         LEFT JOIN categories ON items.category_id = categories.id
         LEFT JOIN users ON users.id = items.user_id";
@@ -685,13 +685,16 @@ $sql .= " ORDER BY items.id DESC";
                                                 
                                                 <div class="field">
                                                     <?php if ($it["item_status"] == "lost"): ?>
-                                                    <strong>Date lost <br></strong>
+                                                        <strong>Date lost <br></strong>
                                                     <?php elseif ($it["item_status"] == "found"): ?>
-                                                        <strong>Date found <br></strong>
+                                                         <strong>Date found <br></strong>
                                                     <?php endif; ?>  
                                                     <?php echo htmlspecialchars($it["date_lost_or_found"]); ?> <br> 
                                                 </div>
-                                                
+                                                <div>
+                                                    <strong>Posted at<br></strong>
+                                                    <?php echo htmlspecialchars($it["date_created"]);?>
+                                                </div>
                                             </div>
                                         </p>
                                     </div>
@@ -703,8 +706,12 @@ $sql .= " ORDER BY items.id DESC";
                                             <p>Go to the Lost and Found Office to check if the item matched is yours and claim.</p>
                                             <a href="about_us.php#lf_office">Visit FAQs for Lost & Found Office Infos</a>
                                         <?php else: ?>
-                                            <p>Is this yours? If you think it is, head to the Lost and Found Office, prove possesion and claim now!</p>
-                                            <a href="about_us.php#lf_office">Lost and Found Office Info</a>
+                                            <?php if ($it["item_status"] != "lost"): ?>
+                                                <p>Is this yours? If you think it is, head to the Lost and Found Office, prove possesion and claim now!</p>
+                                            <?php else: ?>
+                                                <p>If you've seen it take it to the Lost and Found Office, and help others find their items!</p>
+                                            <?php endif; ?>
+                                                <a href="about_us.php#lf_office">Lost and Found Office Info</a>
                                         <?php endif; ?>
                                     </div>
                                     </div>

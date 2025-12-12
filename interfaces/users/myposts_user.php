@@ -166,7 +166,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && $action === "store") {
     $notif->bindValue(2, $user_id, SQLITE3_INTEGER);
     $notif->bindValue(3, 1, SQLITE3_INTEGER); // 1 = user ID (adjust if needed)
     $notif->bindValue(4, "User posted a lost item requiring review", SQLITE3_TEXT);
-    $notif->bindValue(5, "to_adminr", SQLITE3_TEXT);
+    $notif->bindValue(5, "to_admin", SQLITE3_TEXT);
     $notif->execute();
 
     header("Location: dashboard_user.php?msg=Item+Posted.+Admin+will+notify+if+an+item+match+is+found.");
@@ -226,7 +226,7 @@ if (!empty($_GET['item_status'])) {
     $where[] = "items.item_status = '$status'";
 }
 
-$sql = "SELECT items.*, categories.name AS category_name, users.username AS posted_by
+$sql = "SELECT items.*, categories.name AS category_name, users.username AS posted_by, items.created_at AS date_created
         FROM items
         LEFT JOIN categories ON items.category_id = categories.id
         LEFT JOIN users ON users.id = items.user_id";
@@ -710,7 +710,10 @@ $sql .= " ORDER BY items.id DESC";
                                                         <?php endif; ?>  
                                                         <?php echo htmlspecialchars($it["date_lost_or_found"]); ?> <br> 
                                                     </div>
-                                                    
+                                                    <div>
+                                                        <strong>Posted at<br></strong>
+                                                        <?php echo htmlspecialchars($it["date_created"]);?>
+                                                    </div>
                                                 </div>
                                             </p>
                                         </div>

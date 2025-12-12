@@ -168,7 +168,7 @@ if ($action === "claim") {
         $deleteNotif->bindValue(1, $id, SQLITE3_INTEGER);
         $deleteNotif->execute();
 
-        header("Location: dashboard_admin.php?msg=Item+Claimed+And+Notification+Removed");
+        header("Location: dashboard_admin.php?msg=Item+Claimed.");
         exit;
     } else {
         $error = "Invalid item ID for claiming.";
@@ -236,7 +236,7 @@ if (!empty($_GET['item_status'])) {
     $where[] = "items.item_status = '$status'";
 }
 
-$sql = "SELECT items.*, categories.name AS category_name, users.username AS posted_by
+$sql = "SELECT items.*, categories.name AS category_name, users.username AS posted_by, items.created_at AS date_created
         FROM items
         LEFT JOIN categories ON items.category_id = categories.id
         LEFT JOIN users ON users.id = items.user_id";
@@ -712,7 +712,7 @@ $sql .= " ORDER BY items.id DESC";
                                                 <?php echo htmlspecialchars($it["description"]); ?><br>
                                                 <div class = "details">
                                                     <div class="field">
-                                                        <?php if (!empty($it["location_lost"])): ?>
+                                                    <?php if (!empty($it["location_lost"])): ?>
                                                         <strong>Location Lost <br></strong>
                                                         <?php echo htmlspecialchars($it["location_lost"]); ?>
                                                     <?php elseif (!empty($it["location_found"])): ?>
@@ -726,9 +726,12 @@ $sql .= " ORDER BY items.id DESC";
                                                             <strong>Date Lost <br></strong>
                                                         <?php else: ?>
                                                             <strong>Date Found <br></strong>
-                                                        <?php endif; ?>  
-                                                        
+                                                        <?php endif; ?>     
                                                         <?php echo htmlspecialchars($it["date_lost_or_found"]); ?> <br>  
+                                                    </div>
+                                                    <div>
+                                                        <strong>Posted at<br></strong>
+                                                        <?php echo htmlspecialchars($it["date_created"]);?>
                                                     </div>
                                                     
                                                 </div>
